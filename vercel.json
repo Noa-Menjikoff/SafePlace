@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/sync-comments",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/generate-summaries",
+      "schedule": "0 7 * * 1"
+    }
+  ]
+}

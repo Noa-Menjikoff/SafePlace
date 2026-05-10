@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SafeSpace
 
-## Getting Started
+Filtre intelligent de commentaires YouTube/Instagram pour créateurs.
+Transforme 500 commentaires bruts en 5 insights actionnables, sans toxicité.
 
-First, run the development server:
+## Stack
+
+- Next.js 14 (App Router) + TypeScript
+- Tailwind CSS
+- Supabase (Postgres + Auth + RLS)
+- Gemini 2.5 Flash (`@google/generative-ai`)
+- Stripe + Resend
+- Déploiement Vercel + Vercel Cron
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+L'app tourne sur http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configuration Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Exécute toutes les migrations `supabase/migrations/*.sql` dans le SQL editor.
+2. Active le provider **Google** dans `Authentication → Providers` :
+   - Client ID : valeur de `YOUTUBE_CLIENT_ID`
+   - Client Secret : valeur de `YOUTUBE_CLIENT_SECRET`
+   - Redirect URL : `https://<ref>.supabase.co/auth/v1/callback`
+3. Dans Google Cloud Console, ajoute :
+   - `http://localhost:3000/auth/callback` (login Supabase)
+   - `http://localhost:3000/api/youtube/callback` (connexion chaîne)
 
-## Learn More
+## Configuration Stripe
 
-To learn more about Next.js, take a look at the following resources:
+1. Dans le dashboard Stripe (mode test), crée un **produit** "SafeSpace Pro"
+   avec un **price récurrent à 14 €/mois**.
+2. Copie le `price_id` (commence par `price_…`) dans `.env.local` :
+   ```
+   STRIPE_PRICE_ID_PRO=price_xxxxxxxxxxxxxxxxxx
+   ```
+3. Active le **Customer Portal** dans
+   `Settings → Billing → Customer portal` (sinon /api/stripe/portal échoue).
+4. **Webhook en local** : lance Stripe CLI et forward vers Next :
+   ```bash
+   stripe listen --forward-to localhost:3000/api/stripe/webhook
+   ```
+   Le CLI te donne un `whsec_…` à mettre dans `STRIPE_WEBHOOK_SECRET`.
+5. Cartes de test : `4242 4242 4242 4242` (succès), `4000 0000 0000 9995`
+   (refusé). Date future et CVC au choix.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Variables d'environnement
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Voir `.env.local`. Aucune valeur n'est commitée.
 
-## Deploy on Vercel
+## Roadmap d'implémentation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Socle : Next.js + Supabase Auth + Middleware + Layout Sidebar
+2. OAuth YouTube
+3. Sync commentaires
+4. Classification IA Gemini
+5. Dashboard TL;DR
+6. Clean Feed
+7. Support Wall
+8. Quick Reply (Pro)
+9. Stats (Pro)
+10. Settings
+11. Stripe — fait
+12. Cron jobs
+13. i18n FR/EN
+14. Polish
