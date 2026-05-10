@@ -7,25 +7,26 @@ import {
   Lock,
   RefreshCw,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { getAppContext } from "@/lib/auth-context";
 import { relativeTimeFr } from "@/lib/format";
 import { FilterModeSelector } from "@/components/settings/filter-mode-selector";
 import { MetricShieldToggle } from "@/components/settings/metric-shield-toggle";
 import { LanguageSelector } from "@/components/settings/language-selector";
+import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { SubscriptionCard } from "@/components/settings/subscription-card";
 
 export const dynamic = "force-dynamic";
 
-const REASONS: Record<string, string> = {
-  state_mismatch: "Session OAuth invalide. Réessaie depuis cette page.",
-  token_exchange: "Google a refusé l'échange du code. Réessaie.",
-  channel_fetch: "Impossible de récupérer ta chaîne YouTube.",
-  no_channel: "Aucune chaîne YouTube trouvée sur ce compte Google.",
-  db: "Erreur d'enregistrement. Réessaie dans un instant.",
-  missing_params: "Paramètres OAuth manquants.",
-  access_denied:
-    "Tu as refusé l'accès. SafeSpace a besoin de ces permissions pour aspirer tes commentaires.",
-};
+const REASON_KEYS = [
+  "state_mismatch",
+  "token_exchange",
+  "channel_fetch",
+  "no_channel",
+  "db",
+  "missing_params",
+  "access_denied",
+] as const;
 
 export default async function SettingsPage({
   searchParams,
@@ -41,23 +42,28 @@ export default async function SettingsPage({
   };
 }) {
   const ctx = await getAppContext();
+  const t = await getTranslations("settings");
+  const tBanners = await getTranslations("settings.banners");
+  const tConnections = await getTranslations("settings.connections");
+  const tReasons = await getTranslations("settings.banners.ytReasons");
+
   const youtubeChannels = ctx.channels.filter((c) => c.platform === "youtube");
   const plan = ctx.plan;
   const channelLimit = plan === "pro" ? 3 : 1;
   const canAddChannel = youtubeChannels.length < channelLimit;
-  const filterMode = ctx.filterMode;
-  const language = ctx.language;
-  const metricShield = ctx.metricShield;
-  // Recovery banner si on a un customer Stripe mais que plan=free (webhook raté en local).
+  const planLabel = plan === "pro" ? tConnections("planPro") : tConnections("planFree");
   const showRecoveryBanner = plan === "free" && !!ctx.stripeCustomerId;
+  const reason = searchParams.reason as (typeof REASON_KEYS)[number] | undefined;
+  const reasonText =
+    reason && (REASON_KEYS as readonly string[]).includes(reason)
+      ? tReasons(reason)
+      : tReasons("default");
 
   return (
     <div className="mx-auto max-w-3xl flex flex-col gap-8">
       <div>
-        <h1 className="text-h1">Réglages</h1>
-        <p className="text-muted text-body mt-1">
-          Connexions, filtrage, langue et abonnement.
-        </p>
+        <h1 className="text-h1">{t("title")}</h1>
+        <p className="text-muted text-body mt-1">{t("subtitle")}</p>
       </div>
 
       {searchParams.yt === "connected" ? (
@@ -65,11 +71,10 @@ export default async function SettingsPage({
           <Check className="h-4 w-4 mt-0.5 text-teal" aria-hidden />
           <div>
             <p className="text-body font-medium text-teal">
-              Chaîne YouTube connectée
+              {tBanners("ytConnected")}
             </p>
             <p className="text-caption text-muted">
-              Lance une première synchro pour aspirer les commentaires des 7
-              derniers jours.
+              {tBanners("ytConnectedDesc")}
             </p>
           </div>
         </div>
@@ -80,12 +85,9 @@ export default async function SettingsPage({
           <AlertCircle className="h-4 w-4 mt-0.5 text-amber" aria-hidden />
           <div>
             <p className="text-body font-medium text-amber">
-              Connexion YouTube échouée
+              {tBanners("ytErrorTitle")}
             </p>
-            <p className="text-caption text-muted">
-              {REASONS[searchParams.reason ?? ""] ??
-                "Une erreur est survenue. Réessaie."}
-            </p>
+            <p className="text-caption text-muted">{reasonText}</p>
           </div>
         </div>
       ) : null}
@@ -94,10 +96,11 @@ export default async function SettingsPage({
         <div className="ss-card flex items-start gap-3 border-border p-4">
           <Plug className="h-4 w-4 mt-0.5 text-muted" aria-hidden />
           <div>
-            <p className="text-body font-medium">Chaîne déconnectée</p>
+            <p className="text-body font-medium">
+              {tBanners("ytDisconnectedTitle")}
+            </p>
             <p className="text-caption text-muted">
-              On ne touchera plus à tes commentaires. Tu peux reconnecter quand
-              tu veux.
+              {tBanners("ytDisconnectedDesc")}
             </p>
           </div>
         </div>
@@ -108,16 +111,15 @@ export default async function SettingsPage({
           <Check className="h-4 w-4 mt-0.5 text-teal" aria-hidden />
           <div>
             <p className="text-body font-medium text-teal">
-              Synchronisation terminée
+              {tBanners("syncDoneTitle")}
             </p>
             <p className="text-caption text-muted">
-              {searchParams.count ?? "0"} nouveau
-              {Number(searchParams.count ?? 0) > 1 ? "x" : ""} commentaire
-              {Number(searchParams.count ?? 0) > 1 ? "s" : ""} aspiré
-              {Number(searchParams.count ?? 0) > 1 ? "s" : ""} ·{" "}
-              {searchParams.classified ?? "0"} classé
-              {Number(searchParams.classified ?? 0) > 1 ? "s" : ""} par
-              l&apos;IA.
+              {tBanners("syncDoneDesc", {
+                count: searchParams.count ?? "0",
+                plural: Number(searchParams.count ?? 0) > 1 ? "s" : "",
+                classified: searchParams.classified ?? "0",
+                cplural: Number(searchParams.classified ?? 0) > 1 ? "s" : "",
+              })}
             </p>
           </div>
         </div>
@@ -128,11 +130,10 @@ export default async function SettingsPage({
           <AlertCircle className="h-4 w-4 mt-0.5 text-amber" aria-hidden />
           <div>
             <p className="text-body font-medium text-amber">
-              Synchronisation interrompue
+              {tBanners("syncErrorTitle")}
             </p>
             <p className="text-caption text-muted">
-              YouTube a renvoyé une erreur. Vérifie les permissions ou réessaie
-              dans un moment.
+              {tBanners("syncErrorDesc")}
             </p>
           </div>
         </div>
@@ -142,10 +143,11 @@ export default async function SettingsPage({
         <div className="ss-card flex items-start gap-3 border-teal/30 bg-teal-light p-4">
           <Check className="h-4 w-4 mt-0.5 text-teal" aria-hidden />
           <div>
-            <p className="text-body font-medium text-teal">Bienvenue chez Pro</p>
+            <p className="text-body font-medium text-teal">
+              {tBanners("stripeSuccessTitle")}
+            </p>
             <p className="text-caption text-muted">
-              Ton abonnement est actif. Quick Reply, Stats 90j et tout le reste
-              sont débloqués.
+              {tBanners("stripeSuccessDesc")}
             </p>
           </div>
         </div>
@@ -155,9 +157,11 @@ export default async function SettingsPage({
         <div className="ss-card flex items-start gap-3 border-border p-4">
           <AlertCircle className="h-4 w-4 mt-0.5 text-muted" aria-hidden />
           <div>
-            <p className="text-body font-medium">Paiement annulé</p>
+            <p className="text-body font-medium">
+              {tBanners("stripeCancelTitle")}
+            </p>
             <p className="text-caption text-muted">
-              Tu peux relancer le checkout à tout moment depuis cette page.
+              {tBanners("stripeCancelDesc")}
             </p>
           </div>
         </div>
@@ -168,10 +172,10 @@ export default async function SettingsPage({
           <AlertCircle className="h-4 w-4 mt-0.5 text-amber" aria-hidden />
           <div>
             <p className="text-body font-medium text-amber">
-              Stripe a renvoyé une erreur
+              {tBanners("stripeErrorTitle")}
             </p>
             <p className="text-caption text-muted">
-              Vérifie ta configuration Stripe (price ID, clés) ou réessaie.
+              {tBanners("stripeErrorDesc")}
             </p>
           </div>
         </div>
@@ -182,12 +186,7 @@ export default async function SettingsPage({
           <AlertCircle className="h-4 w-4 mt-0.5 text-amber" aria-hidden />
           <div>
             <p className="text-body font-medium text-amber">
-              Configuration Stripe incomplète
-            </p>
-            <p className="text-caption text-muted">
-              Ajoute <code className="font-mono">STRIPE_PRICE_ID_PRO</code> dans
-              <code className="font-mono"> .env.local</code> avant de pouvoir
-              démarrer un checkout.
+              {tBanners("stripeMissingTitle")}
             </p>
           </div>
         </div>
@@ -197,10 +196,11 @@ export default async function SettingsPage({
         <div className="ss-card flex items-start gap-3 border-border p-4">
           <AlertCircle className="h-4 w-4 mt-0.5 text-muted" aria-hidden />
           <div>
-            <p className="text-body font-medium">Aucun abonnement à gérer</p>
+            <p className="text-body font-medium">
+              {tBanners("stripeNoCustomerTitle")}
+            </p>
             <p className="text-caption text-muted">
-              Tu n&apos;as pas encore souscrit. Passe en Pro pour activer le
-              portail Stripe.
+              {tBanners("stripeNoCustomerDesc")}
             </p>
           </div>
         </div>
@@ -211,10 +211,10 @@ export default async function SettingsPage({
           <Check className="h-4 w-4 mt-0.5 text-teal" aria-hidden />
           <div>
             <p className="text-body font-medium text-teal">
-              Abonnement synchronisé
+              {tBanners("stripeSyncedProTitle")}
             </p>
             <p className="text-caption text-muted">
-              Plan Pro actif. Tout est débloqué.
+              {tBanners("stripeSyncedProDesc")}
             </p>
           </div>
         </div>
@@ -224,9 +224,11 @@ export default async function SettingsPage({
         <div className="ss-card flex items-start gap-3 border-border p-4">
           <Check className="h-4 w-4 mt-0.5 text-muted" aria-hidden />
           <div>
-            <p className="text-body font-medium">Aucune subscription active</p>
+            <p className="text-body font-medium">
+              {tBanners("stripeSyncedFreeTitle")}
+            </p>
             <p className="text-caption text-muted">
-              Stripe ne renvoie pas de subscription active pour ce compte.
+              {tBanners("stripeSyncedFreeDesc")}
             </p>
           </div>
         </div>
@@ -237,19 +239,19 @@ export default async function SettingsPage({
           <AlertCircle className="h-4 w-4 mt-0.5 text-amber" aria-hidden />
           <div className="flex-1 min-w-0">
             <p className="text-body font-medium text-amber">
-              Subscription Stripe potentiellement désynchronisée
+              {tBanners("recoveryTitle")}
             </p>
             <p className="text-caption text-muted">
-              Tu as un customer Stripe lié mais ton plan reste sur Gratuit. Le
-              webhook a peut-être manqué l&apos;événement (en local, lance
-              <code className="font-mono"> stripe listen</code>). Tu peux
-              forcer la synchro :
+              {tBanners("recoveryDesc")}
             </p>
           </div>
           <form action="/api/stripe/refresh-plan" method="post">
-            <button type="submit" className="ss-button-primary h-9 px-3 text-caption">
+            <button
+              type="submit"
+              className="ss-button-primary h-9 px-3 text-caption"
+            >
               <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-              Resynchroniser
+              {tBanners("recoveryCta")}
             </button>
           </form>
         </div>
@@ -259,13 +261,14 @@ export default async function SettingsPage({
       <section className="ss-card p-6">
         <header className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-h2">Connexions</h2>
+            <h2 className="text-h2">{tConnections("title")}</h2>
             <p className="text-caption text-muted mt-0.5">
-              Plan {plan === "pro" ? "Pro" : "Gratuit"} :
-              {" "}
-              {youtubeChannels.length}/{channelLimit} chaîne
-              {channelLimit > 1 ? "s" : ""} connectée
-              {youtubeChannels.length > 1 ? "s" : ""}.
+              {tConnections("planLabel", {
+                plan: planLabel,
+                used: youtubeChannels.length,
+                limit: channelLimit,
+                plural: channelLimit > 1 ? "s" : "",
+              })}
             </p>
           </div>
         </header>
@@ -273,16 +276,18 @@ export default async function SettingsPage({
         <div className="mt-5 flex flex-col gap-3">
           {youtubeChannels.length === 0 ? (
             <div className="rounded-md border border-dashed border-border p-5 text-center">
-              <p className="text-body font-medium">Aucune chaîne connectée</p>
+              <p className="text-body font-medium">
+                {tConnections("noChannelTitle")}
+              </p>
               <p className="text-caption text-muted mt-1">
-                Connecte ta chaîne YouTube pour démarrer l&apos;analyse.
+                {tConnections("noChannelDesc")}
               </p>
               <a
                 href="/api/youtube/connect"
                 className="ss-button-primary mt-4 inline-flex"
               >
                 <Plus className="h-4 w-4" aria-hidden />
-                Connecter YouTube
+                {tConnections("connectCta")}
               </a>
             </div>
           ) : (
@@ -309,8 +314,15 @@ export default async function SettingsPage({
                       <p className="text-body font-medium truncate">{c.name}</p>
                       <p className="text-caption text-muted">
                         YouTube ·{" "}
-                        {(c.subscriber_count ?? 0).toLocaleString("fr-FR")}{" "}
-                        abonnés · sync {relativeTimeFr(c.last_synced_at)}
+                        {tConnections("subscribers", {
+                          count: (c.subscriber_count ?? 0).toLocaleString(
+                            "fr-FR"
+                          ),
+                        })}{" "}
+                        ·{" "}
+                        {tConnections("syncRelative", {
+                          time: relativeTimeFr(c.last_synced_at),
+                        })}
                       </p>
                     </div>
                   </div>
@@ -323,7 +335,7 @@ export default async function SettingsPage({
                         className="ss-button-ghost h-9 px-3 text-caption"
                       >
                         <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-                        Synchroniser
+                        {tConnections("sync")}
                       </button>
                     </form>
                     <form action="/api/youtube/disconnect" method="post">
@@ -332,7 +344,7 @@ export default async function SettingsPage({
                         type="submit"
                         className="ss-button-ghost h-9 px-3 text-caption"
                       >
-                        Déconnecter
+                        {tConnections("disconnect")}
                       </button>
                     </form>
                   </div>
@@ -345,12 +357,12 @@ export default async function SettingsPage({
                   className="ss-button-ghost justify-center"
                 >
                   <Plus className="h-4 w-4" aria-hidden />
-                  Connecter une autre chaîne
+                  {tConnections("connectAnother")}
                 </a>
               ) : (
                 <p className="text-caption text-muted text-center">
-                  Tu as atteint la limite du plan {plan === "pro" ? "Pro" : "Gratuit"}.
-                  {plan !== "pro" ? " Passe en Pro pour 3 chaînes." : ""}
+                  {tConnections("limitReached", { plan: planLabel })}
+                  {plan !== "pro" ? tConnections("upgradeForMore") : ""}
                 </p>
               )}
             </>
@@ -361,8 +373,12 @@ export default async function SettingsPage({
               <Lock className="h-4 w-4 text-primary" aria-hidden />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-body font-medium">Instagram</p>
-              <p className="text-caption text-muted">Bientôt disponible (phase 2).</p>
+              <p className="text-body font-medium">
+                {tConnections("instagramSoon")}
+              </p>
+              <p className="text-caption text-muted">
+                {tConnections("instagramHint")}
+              </p>
             </div>
           </div>
         </div>
@@ -371,49 +387,48 @@ export default async function SettingsPage({
       {/* 2. Niveau de filtrage */}
       <section className="ss-card p-6">
         <header>
-          <h2 className="text-h2">Niveau de filtrage</h2>
+          <h2 className="text-h2">{t("filterMode.title")}</h2>
           <p className="text-caption text-muted mt-0.5">
-            Décide à partir de quel niveau de toxicité un commentaire est
-            masqué dans le Clean Feed. Tu peux changer à tout moment.
+            {t("filterMode.subtitle")}
           </p>
         </header>
         <div className="mt-5">
-          <FilterModeSelector initial={filterMode} />
+          <FilterModeSelector initial={ctx.filterMode} />
         </div>
       </section>
 
       {/* 3. Affichage */}
       <section className="ss-card p-6">
         <header>
-          <h2 className="text-h2">Affichage</h2>
+          <h2 className="text-h2">{t("display.title")}</h2>
           <p className="text-caption text-muted mt-0.5">
-            Préférences pour réduire l&apos;anxiété au quotidien.
+            {t("display.subtitle")}
           </p>
         </header>
         <div className="mt-5 flex flex-col gap-5">
-          <MetricShieldToggle initial={metricShield} />
+          <MetricShieldToggle initial={ctx.metricShield} />
           <div>
-            <p className="text-body font-medium mb-2">Langue</p>
-            <LanguageSelector initial={language} />
+            <p className="text-body font-medium mb-2">{t("display.theme")}</p>
+            <ThemeToggle />
+          </div>
+          <div>
+            <p className="text-body font-medium mb-2">{t("display.language")}</p>
+            <LanguageSelector initial={ctx.language} />
           </div>
         </div>
       </section>
 
-      {/* 4. Re-classifier (admin / debug) */}
+      {/* 4. Re-classifier */}
       {youtubeChannels.length > 0 ? (
         <section className="ss-card p-6">
-          <h2 className="text-h2">Re-classifier les commentaires</h2>
-          <p className="text-caption text-muted mt-1">
-            Force une nouvelle passe IA sur tous les commentaires existants.
-            Utile si tu changes le niveau de filtrage ou si la classification
-            précédente s&apos;est trompée.
-          </p>
+          <h2 className="text-h2">{t("reclassify.title")}</h2>
+          <p className="text-caption text-muted mt-1">{t("reclassify.desc")}</p>
           <form action="/api/ai/classify" method="post" className="mt-4">
             <input type="hidden" name="force" value="1" />
             <input type="hidden" name="redirect" value="1" />
             <button type="submit" className="ss-button-ghost">
               <RefreshCw className="h-4 w-4" aria-hidden />
-              Re-classifier tout
+              {t("reclassify.cta")}
             </button>
           </form>
         </section>

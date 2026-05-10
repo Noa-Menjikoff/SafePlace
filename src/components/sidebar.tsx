@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Inbox,
@@ -14,29 +15,33 @@ import {
 import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 
+type NavKey =
+  | "dashboard"
+  | "feed"
+  | "wall"
+  | "reply"
+  | "stats"
+  | "settings";
+
 type NavItem = {
   href: string;
-  label: string;
+  key: NavKey;
   icon: typeof LayoutDashboard;
   proOnly?: boolean;
 };
 
 const NAV: NavItem[] = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/feed", label: "Clean Feed", icon: Inbox },
-  { href: "/wall", label: "Mur de soutien", icon: Heart },
-  {
-    href: "/reply",
-    label: "Quick Reply",
-    icon: MessageSquareReply,
-    proOnly: true,
-  },
-  { href: "/stats", label: "Stats", icon: BarChart3, proOnly: true },
-  { href: "/settings", label: "Réglages", icon: Settings },
+  { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
+  { href: "/feed", key: "feed", icon: Inbox },
+  { href: "/wall", key: "wall", icon: Heart },
+  { href: "/reply", key: "reply", icon: MessageSquareReply, proOnly: true },
+  { href: "/stats", key: "stats", icon: BarChart3, proOnly: true },
+  { href: "/settings", key: "settings", icon: Settings },
 ];
 
 export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
   const pathname = usePathname();
+  const t = useTranslations("nav");
 
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-surface px-4 py-6 sticky top-0 h-screen overflow-y-auto">
@@ -63,7 +68,7 @@ export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
               )}
             >
               <Icon className="h-4 w-4" aria-hidden />
-              <span className="flex-1">{item.label}</span>
+              <span className="flex-1">{t(item.key)}</span>
               {locked ? (
                 <Lock className="h-3.5 w-3.5 text-muted" aria-hidden />
               ) : null}
@@ -74,16 +79,16 @@ export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
 
       <div className="mt-auto pt-6">
         <div className="ss-card p-4">
-          <p className="text-caption text-muted">Plan actuel</p>
+          <p className="text-caption text-muted">{t("currentPlan")}</p>
           <p className="mt-1 text-body font-medium">
-            {plan === "pro" ? "SafeSpace Pro" : "SafeSpace Gratuit"}
+            {plan === "pro" ? t("planPro") : t("planFree")}
           </p>
           {plan !== "pro" ? (
             <Link
               href="/settings?upgrade=1"
               className="mt-3 inline-flex w-full justify-center ss-button-primary py-2 text-caption"
             >
-              Passer en Pro
+              {t("upgradeCta")}
             </Link>
           ) : null}
         </div>

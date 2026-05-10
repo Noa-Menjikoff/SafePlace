@@ -1,10 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { FILTER_MODES, type FilterMode } from "@/lib/filter-mode";
+import { LOCALE_COOKIE } from "@/i18n/request";
 
 export const dynamic = "force-dynamic";
 
 const VALID_LANGUAGES = ["fr", "en"] as const;
+const ONE_YEAR = 60 * 60 * 24 * 365;
 
 export async function POST(request: NextRequest) {
   const supabase = createSupabaseServerClient();
@@ -65,6 +68,16 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Si la langue change, on pose aussi le cookie NEXT_LOCALE pour que
+  // next-intl résolve la nouvelle locale dès le prochain request.
+  if (typeof updates.language === "string") {
+    cookies().set(LOCALE_COOKIE, updates.language, {
+      path: "/",
+      maxAge: ONE_YEAR,
+      sameSite: "lax",
+    });
   }
 
   return NextResponse.json({ ok: true });

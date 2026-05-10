@@ -1,0 +1,323 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "save": "Save",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "close": "Close",
+    "delete": "Delete"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "feed": "Clean Feed",
+    "wall": "Support Wall",
+    "reply": "Quick Reply",
+    "stats": "Stats",
+    "settings": "Settings",
+    "planFree": "SafeSpace Free",
+    "planPro": "SafeSpace Pro",
+    "currentPlan": "Current plan",
+    "upgradeCta": "Upgrade to Pro"
+  },
+  "topbar": {
+    "creatorSpace": "Creator space",
+    "noChannel": "No channel connected",
+    "logout": "Sign out"
+  },
+  "login": {
+    "tagline": "Your community, without the noise.",
+    "continueWithGoogle": "Continue with Google",
+    "loadingGoogle": "Signing in…",
+    "termsHint": "By continuing, you agree to our terms and privacy policy. SafeSpace never deletes your YouTube comments.",
+    "footer": "Built for YouTube and Instagram creators who want to take back control of their attention.",
+    "errorAuth": "Something went wrong. Try again in a moment."
+  },
+  "dashboard": {
+    "greeting": "Hi {name} 👋",
+    "subtitle": "Your community sent you messages. SafeSpace filters them for you.",
+    "firstStep": "First step",
+    "connectTitle": "Connect your YouTube channel",
+    "connectDesc": "We'll fetch your last 7 days of comments, classify them by category, and hide toxicity. No comment is ever deleted from YouTube.",
+    "connectCta": "Connect YouTube",
+    "syncNow": "Sync now",
+    "sync": "Sync",
+    "videosRecent": "Recent videos",
+    "videosEmpty": "No videos with comments in the last 7 days. Run a sync to fetch.",
+    "viewAllInFeed": "See all comments in the Clean Feed →",
+    "pendingClassification": "{count, plural, one {# comment pending classification} other {# comments pending classification}} — run another sync.",
+    "metrics": {
+      "filtered": "Comments filtered",
+      "toxicity": "Toxicity blocked",
+      "score": "Community score",
+      "subscribers": "Subscribers",
+      "syncRelative": "synced {time}",
+      "neverSynced": "never synced",
+      "shieldHidden": "hidden by default · Metric Shield"
+    }
+  },
+  "checkin": {
+    "question": "How are you feeling today?",
+    "subtitle": "One second to check in. No one else sees this.",
+    "doneFelt": "You felt {mood} today {emoji}. Have a good one.",
+    "moods": {
+      "exhausted": "Exhausted",
+      "tired": "Tired",
+      "neutral": "Neutral",
+      "good": "Good",
+      "great": "Great"
+    }
+  },
+  "tldr": {
+    "badge": "Weekly summary",
+    "titleWithInsights": "What your community is telling you",
+    "titleEmpty": "Your first summary is one click away",
+    "subtitle": "Analyzed {time} · {count, plural, one {# comment} other {# comments}}",
+    "regenerate": "Regenerate",
+    "generate": "Generate",
+    "errorGeneration": "Generation failed. Try again in a moment.",
+    "noticeInsufficient": "Not enough classified comments yet (minimum 5). Run a sync.",
+    "noticeEmpty": "Generate the TL;DR of your last 7 days via Gemini.",
+    "moods": {
+      "positive": "Positive vibe",
+      "neutral": "Neutral vibe",
+      "tense": "Tense vibe"
+    },
+    "categories": {
+      "positive": "Positive",
+      "question": "Question",
+      "constructive": "Critique"
+    }
+  },
+  "feed": {
+    "title": "Clean Feed",
+    "subtitle": "Your comments sorted by relevance — questions and feedback first, toxicity hidden at the bottom.",
+    "noChannelTitle": "No channel connected",
+    "noChannelDesc": "Connect your YouTube channel to see comments sorted by relevance.",
+    "noChannelCta": "Go to settings",
+    "filteredOnVideo": "Filtered on video {title}",
+    "removeFilter": "Remove",
+    "filters": {
+      "all": "All",
+      "questions": "Questions",
+      "positive": "Positive",
+      "constructive": "Critiques",
+      "neutral": "Neutral",
+      "hidden": "Hidden"
+    },
+    "emptyHidden": "Nothing to hide right now. Calm vibes.",
+    "emptyCategory": "No comment in this category."
+  },
+  "comment": {
+    "categories": {
+      "positive": "Positive",
+      "question": "Question",
+      "constructive": "Critique",
+      "neutral": "Neutral"
+    },
+    "toxicityHidden": "Toxicity hidden",
+    "savedToWall": "On the wall",
+    "youtubePlatform": "YouTube",
+    "anonymous": "Anonymous",
+    "onVideo": "on",
+    "maskedHover": "Hover to reveal. The comment is still visible on YouTube — only hidden in your feed.",
+    "actions": {
+      "suggestions": "AI suggestions",
+      "suggestionsLoading": "Generating…",
+      "saveToWall": "Support Wall",
+      "hide": "Hide",
+      "unhide": "Show",
+      "copy": "Copy",
+      "copied": "Copied",
+      "regenerate": "Regenerate",
+      "draftsCount": "3 drafts generated",
+      "errorGeneration": "Generation failed. Try again."
+    }
+  },
+  "wall": {
+    "title": "Support Wall",
+    "subtitle": "The words that lift you up, to read again on hard days.",
+    "count": "{count, plural, one {# message on your wall} other {# messages on your wall}}",
+    "addManually": "Add manually",
+    "newEntry": "New supportive note",
+    "placeholder": "\"Your videos help me keep going. Don't stop.\"",
+    "fromPlaceholder": "From whom? (optional)",
+    "addCta": "Add to wall",
+    "share": "Share",
+    "shareCopied": "Copied",
+    "shareDownloaded": "Downloaded",
+    "shareError": "Error",
+    "remove": "Remove",
+    "checkinTitle": "Take a break.",
+    "checkinSubtitle": "No need to open your comments today. Here are the messages that lifted you up recently.",
+    "emptyTitle": "Your wall is empty for now",
+    "emptyDesc": "Go to the Clean Feed and click Support Wall under your favorite comments. Or write a note yourself via the \"Add manually\" button."
+  },
+  "reply": {
+    "badgePro": "Pro plan",
+    "title": "Quick Reply",
+    "subtitle": "Reply to ten similar questions in one move. The AI groups what's similar and proposes 3 drafts per group.",
+    "emptyTitle": "No question waiting",
+    "emptyDesc": "When new questions arrive, we'll group them here so you can reply in one move.",
+    "pendingCount": "{count, plural, one {# question awaiting reply} other {# questions awaiting reply}}",
+    "explainer": "The AI can group similar ones and propose 3 reply drafts per group.",
+    "groupCta": "Group with AI",
+    "regroupCta": "Re-group",
+    "loading": "Analyzing…",
+    "regrouping": "Re-grouping…",
+    "noGroupsFound": "No relevant groups found. Try again with more questions.",
+    "peopleCount": "{count, plural, one {# person} other {# people}}",
+    "draftsLabel": "3 drafts generated",
+    "editPlaceholder": "Edit the reply before sending…",
+    "sendCta": "Send to {count, plural, one {# person} other {# people}}",
+    "sending": "Sending…",
+    "sentSuccess": "{count} sent",
+    "sentFailures": "{count} failure",
+    "errorPro": "This feature is reserved for the Pro plan.",
+    "errorGeneric": "Grouping failed. Try again."
+  },
+  "stats": {
+    "badgePro": "Pro plan",
+    "title": "Protected stats",
+    "subtitle": "Community score, positive/negative ratio, top topics and peak hours — without anxious badges.",
+    "exportCsv": "Export CSV",
+    "windowDays": "{days} days",
+    "scoreTitle": "Community score",
+    "scoreSubtitle": "Over the last {days} days · 0–100",
+    "scoreEmpty": "Not enough data yet to draw the curve.",
+    "topicsTitle": "Most asked topics",
+    "topicsSubtitle": "Keywords extracted from questions",
+    "topicsEmpty": "Not enough questions to extract topics.",
+    "peakTitle": "Peak hours",
+    "peakSubtitle": "Distribution of comments over 24h (UTC)",
+    "peakEmpty": "No comments yet to compute peak hours.",
+    "noChannelTitle": "No channel connected",
+    "noChannelDesc": "Connect your YouTube channel to see your stats.",
+    "noChannelCta": "Go to settings",
+    "ratio": {
+      "title": "Positive / negative ratio",
+      "delta_stable": "stable",
+      "delta_positive": "+{points} pts",
+      "delta_negative": "{points} pts",
+      "positiveCount": "{count, plural, one {# positive} other {# positives}} over {days}d",
+      "negativeCount": "critiques + toxic",
+      "previousLine": "Previous period: {percent}% positive",
+      "previousMonthDelta": "{count} this month"
+    },
+    "tooltips": {
+      "score": "Score: {value}/100",
+      "noData": "No data",
+      "mentions": "{count, plural, one {# mention} other {# mentions}}"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Connections, filtering, language and subscription.",
+    "connections": {
+      "title": "Connections",
+      "planLabel": "{plan} plan: {used}/{limit} channel{plural} connected",
+      "planFree": "Free",
+      "planPro": "Pro",
+      "noChannelTitle": "No channel connected",
+      "noChannelDesc": "Connect your YouTube channel to start the analysis.",
+      "connectCta": "Connect YouTube",
+      "connectAnother": "Connect another channel",
+      "limitReached": "You've reached the limit of the {plan} plan.",
+      "upgradeForMore": " Upgrade to Pro for 3 channels.",
+      "subscribers": "{count} subscribers",
+      "syncRelative": "synced {time}",
+      "sync": "Sync",
+      "disconnect": "Disconnect",
+      "instagramSoon": "Instagram",
+      "instagramHint": "Coming soon (phase 2)."
+    },
+    "banners": {
+      "ytConnected": "YouTube channel connected",
+      "ytConnectedDesc": "Run a first sync to fetch the last 7 days of comments.",
+      "ytErrorTitle": "YouTube connection failed",
+      "ytReasons": {
+        "state_mismatch": "Invalid OAuth session. Try again from this page.",
+        "token_exchange": "Google rejected the code exchange. Try again.",
+        "channel_fetch": "Couldn't fetch your YouTube channel.",
+        "no_channel": "No YouTube channel found on this Google account.",
+        "db": "Save error. Try again in a moment.",
+        "missing_params": "Missing OAuth parameters.",
+        "access_denied": "You denied access. SafeSpace needs these permissions to fetch your comments.",
+        "default": "Something went wrong. Try again."
+      },
+      "ytDisconnectedTitle": "Channel disconnected",
+      "ytDisconnectedDesc": "We won't touch your comments anymore. You can reconnect whenever you want.",
+      "syncDoneTitle": "Sync complete",
+      "syncDoneDesc": "{count} fetched · {classified} classified by AI.",
+      "syncErrorTitle": "Sync interrupted",
+      "syncErrorDesc": "YouTube returned an error. Check the permissions or try again later.",
+      "stripeSuccessTitle": "Welcome to Pro",
+      "stripeSuccessDesc": "Your subscription is active. Quick Reply, 90d Stats and everything else are unlocked.",
+      "stripeCancelTitle": "Payment cancelled",
+      "stripeCancelDesc": "You can restart checkout from this page anytime.",
+      "stripeErrorTitle": "Stripe returned an error",
+      "stripeErrorDesc": "Check your Stripe configuration (price ID, keys) or try again.",
+      "stripeMissingTitle": "Stripe configuration incomplete",
+      "stripeNoCustomerTitle": "No subscription to manage",
+      "stripeNoCustomerDesc": "You haven't subscribed yet. Go Pro to enable the Stripe portal.",
+      "stripeSyncedProTitle": "Subscription synced",
+      "stripeSyncedProDesc": "Pro plan active. Everything is unlocked.",
+      "stripeSyncedFreeTitle": "No active subscription",
+      "stripeSyncedFreeDesc": "Stripe doesn't return any active subscription for this account.",
+      "recoveryTitle": "Stripe subscription possibly out of sync",
+      "recoveryDesc": "You have a Stripe customer linked but your plan is still Free. The webhook may have missed an event.",
+      "recoveryCta": "Resync"
+    },
+    "filterMode": {
+      "title": "Filter level",
+      "subtitle": "Decide from what toxicity level a comment is hidden in the Clean Feed. You can change anytime.",
+      "saveError": "Save failed.",
+      "sensitive": "Sensitive",
+      "sensitiveDesc": "Hides at the slightest negative signal. For fragile days.",
+      "standard": "Standard",
+      "standardDesc": "Hides only personal attacks, harassment, spam.",
+      "tough": "Thick Skin",
+      "toughDesc": "Only hides the most violent comments. You see almost everything."
+    },
+    "display": {
+      "title": "Display",
+      "subtitle": "Preferences to reduce daily anxiety.",
+      "shieldTitle": "Metric Shield",
+      "shieldDesc": "Hide all vanity metrics (subscribers, views) so you don't compare.",
+      "language": "Language",
+      "languageHint": "The AI will reply in this language (TL;DR, reply drafts).",
+      "theme": "Theme"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "Auto"
+    },
+    "reclassify": {
+      "title": "Re-classify comments",
+      "desc": "Force a new AI pass over all existing comments. Useful if you change the filter level or if the previous classification was off.",
+      "cta": "Re-classify all"
+    },
+    "subscription": {
+      "badgeFree": "Free plan",
+      "badgePro": "Pro plan",
+      "titleFree": "All the essentials to get started",
+      "titlePro": "SafeSpace Pro",
+      "priceFree": "$0/month · upgrade anytime",
+      "pricePro": "$14/month · billed via Stripe",
+      "managePortal": "Manage via Stripe",
+      "upgradeCta": "Go Pro · $14/month",
+      "freeFeatures": {
+        "channels": "1 YouTube channel",
+        "tldr": "Weekly TL;DR",
+        "cleanWall": "Clean Feed + Support Wall",
+        "limit": "Limit: 200 comments per analysis"
+      },
+      "proFeatures": {
+        "channels": "3 channels (+ Instagram phase 2)",
+        "tldr": "Daily TL;DR + per video",
+        "replyStats": "Quick Reply + 90d Stats + CSV export",
+        "shield": "Full Metric Shield · no limit"
+      }
+    }
+  }
+}

@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Check, Feather, Shield, Mountain } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FILTER_MODE_META, type FilterMode } from "@/lib/filter-mode";
+import { FILTER_MODES, type FilterMode } from "@/lib/filter-mode";
 
 const ICONS: Record<FilterMode, typeof Feather> = {
   sensitive: Feather,
@@ -14,6 +15,7 @@ const ICONS: Record<FilterMode, typeof Feather> = {
 
 export function FilterModeSelector({ initial }: { initial: FilterMode }) {
   const router = useRouter();
+  const t = useTranslations("settings.filterMode");
   const [value, setValue] = useState<FilterMode>(initial);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export function FilterModeSelector({ initial }: { initial: FilterMode }) {
         router.refresh();
       } catch (e) {
         console.error(e);
-        setError("Échec de l'enregistrement.");
+        setError(t("saveError"));
         setValue(initial);
       }
     });
@@ -41,8 +43,7 @@ export function FilterModeSelector({ initial }: { initial: FilterMode }) {
 
   return (
     <div role="radiogroup" className="grid gap-3 sm:grid-cols-3">
-      {(Object.keys(FILTER_MODE_META) as FilterMode[]).map((m) => {
-        const meta = FILTER_MODE_META[m];
+      {FILTER_MODES.map((m) => {
         const Icon = ICONS[m];
         const active = m === value;
         return (
@@ -65,20 +66,18 @@ export function FilterModeSelector({ initial }: { initial: FilterMode }) {
               <span
                 className={cn(
                   "grid place-items-center h-7 w-7 rounded-md",
-                  active
-                    ? "bg-primary text-white"
-                    : "bg-bg/50 text-muted"
+                  active ? "bg-primary text-white" : "bg-bg/50 text-muted"
                 )}
               >
                 <Icon className="h-3.5 w-3.5" aria-hidden />
               </span>
-              <span className="text-body font-medium">{meta.label}</span>
+              <span className="text-body font-medium">{t(m)}</span>
               {active ? (
                 <Check className="h-4 w-4 ml-auto text-primary" aria-hidden />
               ) : null}
             </div>
             <p className="text-caption text-muted leading-relaxed">
-              {meta.description}
+              {t(`${m}Desc`)}
             </p>
           </button>
         );

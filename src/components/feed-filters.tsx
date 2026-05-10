@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import {
   List,
   MessageCircleQuestion,
@@ -19,20 +20,16 @@ export type FeedFilter =
 
 export type FilterCounts = Record<FeedFilter, number>;
 
-const ITEMS: {
-  value: FeedFilter;
-  label: string;
-  icon: typeof List;
-}[] = [
-  { value: "all", label: "Tous", icon: List },
-  { value: "questions", label: "Questions", icon: MessageCircleQuestion },
-  { value: "positive", label: "Positifs", icon: Heart },
-  { value: "constructive", label: "Critiques", icon: Lightbulb },
-  { value: "neutral", label: "Neutres", icon: Circle },
-  { value: "hidden", label: "Masqués", icon: EyeOff },
+const ITEMS: { value: FeedFilter; icon: typeof List }[] = [
+  { value: "all", icon: List },
+  { value: "questions", icon: MessageCircleQuestion },
+  { value: "positive", icon: Heart },
+  { value: "constructive", icon: Lightbulb },
+  { value: "neutral", icon: Circle },
+  { value: "hidden", icon: EyeOff },
 ];
 
-export function FeedFilters({
+export async function FeedFilters({
   active,
   counts,
   videoId,
@@ -41,6 +38,8 @@ export function FeedFilters({
   counts: FilterCounts;
   videoId?: string | null;
 }) {
+  const t = await getTranslations("feed.filters");
+
   return (
     <div
       role="tablist"
@@ -68,7 +67,7 @@ export function FeedFilters({
             )}
           >
             <Icon className="h-3.5 w-3.5" aria-hidden />
-            <span>{item.label}</span>
+            <span>{t(item.value)}</span>
             <span
               className={cn(
                 "ml-0.5 inline-flex items-center justify-center min-w-[1.25rem] rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",

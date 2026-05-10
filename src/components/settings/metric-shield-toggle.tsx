@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MetricShieldToggle({ initial }: { initial: boolean }) {
   const router = useRouter();
+  const t = useTranslations("settings");
   const [enabled, setEnabled] = useState(initial);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export function MetricShieldToggle({ initial }: { initial: boolean }) {
         router.refresh();
       } catch (e) {
         console.error(e);
-        setError("Échec de l'enregistrement.");
+        setError(t("filterMode.saveError"));
         setEnabled(!next);
       }
     });
@@ -45,10 +47,9 @@ export function MetricShieldToggle({ initial }: { initial: boolean }) {
           <ShieldCheck className="h-4 w-4" aria-hidden />
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-body font-medium">Metric Shield</p>
+          <p className="text-body font-medium">{t("display.shieldTitle")}</p>
           <p className="text-caption text-muted mt-0.5">
-            Masque tous les chiffres de vanité (abonnés, vues) pour ne pas se
-            comparer.
+            {t("display.shieldDesc")}
           </p>
         </div>
         <button

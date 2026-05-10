@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export function GoogleSignInButton({ from }: { from?: string }) {
+  const t = useTranslations("login");
   const [loading, setLoading] = useState(false);
 
   async function signInWithGoogle() {
@@ -56,7 +58,7 @@ export function GoogleSignInButton({ from }: { from?: string }) {
           d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4-4.1 5.3l6.2 5.2C40.7 35.3 44 30 44 24c0-1.3-.1-2.4-.4-3.5z"
         />
       </svg>
-      {loading ? "Connexion…" : "Continuer avec Google"}
+      {loading ? t("loadingGoogle") : t("continueWithGoogle")}
     </button>
   );
 }

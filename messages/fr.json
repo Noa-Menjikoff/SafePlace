@@ -1,0 +1,323 @@
+{
+  "common": {
+    "loading": "Chargement…",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "delete": "Supprimer"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "feed": "Clean Feed",
+    "wall": "Mur de soutien",
+    "reply": "Quick Reply",
+    "stats": "Stats",
+    "settings": "Réglages",
+    "planFree": "SafeSpace Gratuit",
+    "planPro": "SafeSpace Pro",
+    "currentPlan": "Plan actuel",
+    "upgradeCta": "Passer en Pro"
+  },
+  "topbar": {
+    "creatorSpace": "Espace créateur",
+    "noChannel": "Aucune chaîne connectée",
+    "logout": "Déconnexion"
+  },
+  "login": {
+    "tagline": "Ta communauté, sans le bruit.",
+    "continueWithGoogle": "Continuer avec Google",
+    "loadingGoogle": "Connexion…",
+    "termsHint": "En continuant, tu acceptes nos conditions et notre politique de confidentialité. SafeSpace ne supprime jamais tes commentaires YouTube.",
+    "footer": "Pensé pour les créateurs YouTube et Instagram qui veulent reprendre le contrôle de leur attention.",
+    "errorAuth": "Une erreur est survenue. Réessaie dans un instant."
+  },
+  "dashboard": {
+    "greeting": "Bonjour {name} 👋",
+    "subtitle": "Ta communauté t'a envoyé des messages. SafeSpace les filtre pour toi.",
+    "firstStep": "Première étape",
+    "connectTitle": "Connecte ta chaîne YouTube",
+    "connectDesc": "On va aspirer tes commentaires des 7 derniers jours, les classer par catégorie et masquer la toxicité. Aucun commentaire n'est jamais supprimé sur YouTube.",
+    "connectCta": "Connecter YouTube",
+    "syncNow": "Synchroniser maintenant",
+    "sync": "Synchroniser",
+    "videosRecent": "Vidéos récentes",
+    "videosEmpty": "Aucune vidéo avec commentaires sur les 7 derniers jours. Lance un sync pour aspirer.",
+    "viewAllInFeed": "Voir tous les commentaires dans le Clean Feed →",
+    "pendingClassification": "{count, plural, one {# commentaire en attente de classification} other {# commentaires en attente de classification}} — relance un sync.",
+    "metrics": {
+      "filtered": "Commentaires filtrés",
+      "toxicity": "Toxicité bloquée",
+      "score": "Score communauté",
+      "subscribers": "Abonnés",
+      "syncRelative": "sync {time}",
+      "neverSynced": "jamais synchronisé",
+      "shieldHidden": "masqué par défaut · Metric Shield"
+    }
+  },
+  "checkin": {
+    "question": "Comment tu te sens aujourd'hui ?",
+    "subtitle": "Une seconde pour faire le point. Personne d'autre ne le voit.",
+    "doneFelt": "Tu t'es senti {mood} aujourd'hui {emoji}. Bonne journée.",
+    "moods": {
+      "exhausted": "Épuisé",
+      "tired": "Fatigué",
+      "neutral": "Neutre",
+      "good": "Bien",
+      "great": "En forme"
+    }
+  },
+  "tldr": {
+    "badge": "Résumé de la semaine",
+    "titleWithInsights": "Ce que ta communauté te dit",
+    "titleEmpty": "Ton premier résumé est à un clic",
+    "subtitle": "Analysé {time} · {count, plural, one {# commentaire} other {# commentaires}}",
+    "regenerate": "Régénérer",
+    "generate": "Générer",
+    "errorGeneration": "La génération a échoué. Réessaie dans un instant.",
+    "noticeInsufficient": "Pas encore assez de commentaires classés (minimum 5). Lance un sync.",
+    "noticeEmpty": "Génère le TL;DR de tes 7 derniers jours via Gemini.",
+    "moods": {
+      "positive": "Ambiance positive",
+      "neutral": "Ambiance neutre",
+      "tense": "Ambiance tendue"
+    },
+    "categories": {
+      "positive": "Positif",
+      "question": "Question",
+      "constructive": "Critique"
+    }
+  },
+  "feed": {
+    "title": "Clean Feed",
+    "subtitle": "Tes commentaires triés par pertinence — questions et critiques d'abord, toxicité masquée en bas.",
+    "noChannelTitle": "Aucune chaîne connectée",
+    "noChannelDesc": "Connecte ta chaîne YouTube pour voir tes commentaires triés par pertinence.",
+    "noChannelCta": "Aller aux réglages",
+    "filteredOnVideo": "Filtré sur la vidéo {title}",
+    "removeFilter": "Retirer",
+    "filters": {
+      "all": "Tous",
+      "questions": "Questions",
+      "positive": "Positifs",
+      "constructive": "Critiques",
+      "neutral": "Neutres",
+      "hidden": "Masqués"
+    },
+    "emptyHidden": "Rien à masquer pour l'instant. Bonne ambiance.",
+    "emptyCategory": "Aucun commentaire dans cette catégorie."
+  },
+  "comment": {
+    "categories": {
+      "positive": "Positif",
+      "question": "Question",
+      "constructive": "Critique",
+      "neutral": "Neutre"
+    },
+    "toxicityHidden": "Toxicité masquée",
+    "savedToWall": "Sur le mur",
+    "youtubePlatform": "YouTube",
+    "anonymous": "Anonyme",
+    "onVideo": "sur",
+    "maskedHover": "Survole pour révéler. Le commentaire reste visible sur YouTube — il est juste masqué dans ton flux.",
+    "actions": {
+      "suggestions": "Suggestions IA",
+      "suggestionsLoading": "Génération…",
+      "saveToWall": "Mur de soutien",
+      "hide": "Masquer",
+      "unhide": "Réafficher",
+      "copy": "Copier",
+      "copied": "Copié",
+      "regenerate": "Régénérer",
+      "draftsCount": "3 brouillons générés",
+      "errorGeneration": "Échec de la génération. Réessaie."
+    }
+  },
+  "wall": {
+    "title": "Mur de soutien",
+    "subtitle": "Les mots qui te font du bien, à relire les jours difficiles.",
+    "count": "{count, plural, one {# message sur ton mur} other {# messages sur ton mur}}",
+    "addManually": "Ajouter manuellement",
+    "newEntry": "Nouveau mot de soutien",
+    "placeholder": "« Tu fais des vidéos qui m'aident à tenir. Continue. »",
+    "fromPlaceholder": "De qui ? (optionnel)",
+    "addCta": "Ajouter au mur",
+    "share": "Partager",
+    "shareCopied": "Copié",
+    "shareDownloaded": "Téléchargé",
+    "shareError": "Erreur",
+    "remove": "Retirer",
+    "checkinTitle": "Prends une pause.",
+    "checkinSubtitle": "Pas besoin d'ouvrir tes commentaires aujourd'hui. Voici les messages qui t'ont fait du bien dernièrement.",
+    "emptyTitle": "Ton mur est vierge pour l'instant",
+    "emptyDesc": "Va dans le Clean Feed et clique sur Mur de soutien sous tes commentaires préférés. Ou écris un mot toi-même via le bouton « Ajouter manuellement »."
+  },
+  "reply": {
+    "badgePro": "Plan Pro",
+    "title": "Quick Reply",
+    "subtitle": "Réponds à dix questions similaires en un seul mouvement. L'IA regroupe ce qui se ressemble et te propose 3 brouillons par groupe.",
+    "emptyTitle": "Aucune question en attente",
+    "emptyDesc": "Quand de nouvelles questions arriveront, on les regroupera ici pour que tu puisses répondre en un seul mouvement.",
+    "pendingCount": "{count, plural, one {# question en attente de réponse} other {# questions en attente de réponse}}",
+    "explainer": "L'IA peut regrouper celles qui se ressemblent et te proposer 3 brouillons de réponse par groupe.",
+    "groupCta": "Grouper avec l'IA",
+    "regroupCta": "Re-grouper",
+    "loading": "Analyse…",
+    "regrouping": "Re-groupement…",
+    "noGroupsFound": "Pas de groupes pertinents trouvés. Réessaie après plus de questions.",
+    "peopleCount": "{count, plural, one {# personne} other {# personnes}}",
+    "draftsLabel": "3 brouillons générés",
+    "editPlaceholder": "Édite la réponse avant envoi…",
+    "sendCta": "Envoyer à {count, plural, one {# personne} other {# personnes}}",
+    "sending": "Envoi…",
+    "sentSuccess": "{count} envoyé{count, plural, one {} other {s}}",
+    "sentFailures": "{count} échec",
+    "errorPro": "Cette fonction est réservée au plan Pro.",
+    "errorGeneric": "Le groupement a échoué. Réessaie."
+  },
+  "stats": {
+    "badgePro": "Plan Pro",
+    "title": "Stats protégées",
+    "subtitle": "Score communauté, ratio positif/négatif, topics demandés et heures de pointe — sans badges anxiogènes.",
+    "exportCsv": "Export CSV",
+    "windowDays": "{days} jours",
+    "scoreTitle": "Score communauté",
+    "scoreSubtitle": "Sur les {days} derniers jours · 0–100",
+    "scoreEmpty": "Pas encore assez de données pour tracer la courbe.",
+    "topicsTitle": "Topics les plus demandés",
+    "topicsSubtitle": "Mots-clés extraits des questions",
+    "topicsEmpty": "Pas assez de questions pour extraire des topics.",
+    "peakTitle": "Heures de pointe",
+    "peakSubtitle": "Distribution des commentaires sur 24h (UTC)",
+    "peakEmpty": "Pas encore de commentaires pour calculer les heures de pointe.",
+    "noChannelTitle": "Aucune chaîne connectée",
+    "noChannelDesc": "Connecte ta chaîne YouTube pour voir tes stats.",
+    "noChannelCta": "Aller aux réglages",
+    "ratio": {
+      "title": "Ratio positif / négatif",
+      "delta_stable": "stable",
+      "delta_positive": "+{points} pts",
+      "delta_negative": "{points} pts",
+      "positiveCount": "{count, plural, one {# positif} other {# positifs}} sur {days}j",
+      "negativeCount": "critiques + toxiques",
+      "previousLine": "Période précédente : {percent}% positifs",
+      "previousMonthDelta": "{count} ce mois"
+    },
+    "tooltips": {
+      "score": "Score : {value}/100",
+      "noData": "Pas de données",
+      "mentions": "{count, plural, one {# mention} other {# mentions}}"
+    }
+  },
+  "settings": {
+    "title": "Réglages",
+    "subtitle": "Connexions, filtrage, langue et abonnement.",
+    "connections": {
+      "title": "Connexions",
+      "planLabel": "Plan {plan} : {used}/{limit} chaîne{plural} connectée{plural}",
+      "planFree": "Gratuit",
+      "planPro": "Pro",
+      "noChannelTitle": "Aucune chaîne connectée",
+      "noChannelDesc": "Connecte ta chaîne YouTube pour démarrer l'analyse.",
+      "connectCta": "Connecter YouTube",
+      "connectAnother": "Connecter une autre chaîne",
+      "limitReached": "Tu as atteint la limite du plan {plan}.",
+      "upgradeForMore": " Passe en Pro pour 3 chaînes.",
+      "subscribers": "{count} abonnés",
+      "syncRelative": "sync {time}",
+      "sync": "Synchroniser",
+      "disconnect": "Déconnecter",
+      "instagramSoon": "Instagram",
+      "instagramHint": "Bientôt disponible (phase 2)."
+    },
+    "banners": {
+      "ytConnected": "Chaîne YouTube connectée",
+      "ytConnectedDesc": "Lance une première synchro pour aspirer les commentaires des 7 derniers jours.",
+      "ytErrorTitle": "Connexion YouTube échouée",
+      "ytReasons": {
+        "state_mismatch": "Session OAuth invalide. Réessaie depuis cette page.",
+        "token_exchange": "Google a refusé l'échange du code. Réessaie.",
+        "channel_fetch": "Impossible de récupérer ta chaîne YouTube.",
+        "no_channel": "Aucune chaîne YouTube trouvée sur ce compte Google.",
+        "db": "Erreur d'enregistrement. Réessaie dans un instant.",
+        "missing_params": "Paramètres OAuth manquants.",
+        "access_denied": "Tu as refusé l'accès. SafeSpace a besoin de ces permissions pour aspirer tes commentaires.",
+        "default": "Une erreur est survenue. Réessaie."
+      },
+      "ytDisconnectedTitle": "Chaîne déconnectée",
+      "ytDisconnectedDesc": "On ne touchera plus à tes commentaires. Tu peux reconnecter quand tu veux.",
+      "syncDoneTitle": "Synchronisation terminée",
+      "syncDoneDesc": "{count} aspiré{plural} · {classified} classé{cplural} par l'IA.",
+      "syncErrorTitle": "Synchronisation interrompue",
+      "syncErrorDesc": "YouTube a renvoyé une erreur. Vérifie les permissions ou réessaie dans un moment.",
+      "stripeSuccessTitle": "Bienvenue chez Pro",
+      "stripeSuccessDesc": "Ton abonnement est actif. Quick Reply, Stats 90j et tout le reste sont débloqués.",
+      "stripeCancelTitle": "Paiement annulé",
+      "stripeCancelDesc": "Tu peux relancer le checkout à tout moment depuis cette page.",
+      "stripeErrorTitle": "Stripe a renvoyé une erreur",
+      "stripeErrorDesc": "Vérifie ta configuration Stripe (price ID, clés) ou réessaie.",
+      "stripeMissingTitle": "Configuration Stripe incomplète",
+      "stripeNoCustomerTitle": "Aucun abonnement à gérer",
+      "stripeNoCustomerDesc": "Tu n'as pas encore souscrit. Passe en Pro pour activer le portail Stripe.",
+      "stripeSyncedProTitle": "Abonnement synchronisé",
+      "stripeSyncedProDesc": "Plan Pro actif. Tout est débloqué.",
+      "stripeSyncedFreeTitle": "Aucune subscription active",
+      "stripeSyncedFreeDesc": "Stripe ne renvoie pas de subscription active pour ce compte.",
+      "recoveryTitle": "Subscription Stripe potentiellement désynchronisée",
+      "recoveryDesc": "Tu as un customer Stripe lié mais ton plan reste sur Gratuit. Le webhook a peut-être manqué l'événement.",
+      "recoveryCta": "Resynchroniser"
+    },
+    "filterMode": {
+      "title": "Niveau de filtrage",
+      "subtitle": "Décide à partir de quel niveau de toxicité un commentaire est masqué dans le Clean Feed. Tu peux changer à tout moment.",
+      "saveError": "Échec de l'enregistrement.",
+      "sensitive": "Sensible",
+      "sensitiveDesc": "Masque dès le moindre signal négatif. Pour les jours fragiles.",
+      "standard": "Standard",
+      "standardDesc": "Masque uniquement les attaques personnelles, le harcèlement, le spam.",
+      "tough": "Peau Dure",
+      "toughDesc": "Ne masque que les commentaires les plus violents. Tu vois presque tout."
+    },
+    "display": {
+      "title": "Affichage",
+      "subtitle": "Préférences pour réduire l'anxiété au quotidien.",
+      "shieldTitle": "Metric Shield",
+      "shieldDesc": "Masque tous les chiffres de vanité (abonnés, vues) pour ne pas se comparer.",
+      "language": "Langue",
+      "languageHint": "L'IA répondra dans cette langue (TL;DR, brouillons de réponse).",
+      "theme": "Thème"
+    },
+    "theme": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Auto"
+    },
+    "reclassify": {
+      "title": "Re-classifier les commentaires",
+      "desc": "Force une nouvelle passe IA sur tous les commentaires existants. Utile si tu changes le niveau de filtrage ou si la classification précédente s'est trompée.",
+      "cta": "Re-classifier tout"
+    },
+    "subscription": {
+      "badgeFree": "Plan Gratuit",
+      "badgePro": "Plan Pro",
+      "titleFree": "Tout l'essentiel pour démarrer",
+      "titlePro": "SafeSpace Pro",
+      "priceFree": "0 €/mois · upgrade quand tu veux",
+      "pricePro": "14 €/mois · facturé via Stripe",
+      "managePortal": "Gérer via Stripe",
+      "upgradeCta": "Passer en Pro · 14€/mois",
+      "freeFeatures": {
+        "channels": "1 chaîne YouTube",
+        "tldr": "TL;DR hebdomadaire",
+        "cleanWall": "Clean Feed + Mur de soutien",
+        "limit": "Limite : 200 commentaires par analyse"
+      },
+      "proFeatures": {
+        "channels": "3 chaînes (+ Instagram phase 2)",
+        "tldr": "TL;DR quotidien + par vidéo",
+        "replyStats": "Quick Reply + Stats 90j + Export CSV",
+        "shield": "Metric Shield complet · sans limite"
+      }
+    }
+  }
+}

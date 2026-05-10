@@ -8,6 +8,7 @@ import {
   Gauge,
 } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getAppContext } from "@/lib/auth-context";
 import { CheckInBanner } from "@/components/checkin-banner";
@@ -38,6 +39,7 @@ export default async function DashboardPage({
   searchParams: SearchParams;
 }) {
   const ctx = await getAppContext();
+  const t = await getTranslations("dashboard");
   const supabase = createSupabaseServerClient();
   const channelIds = ctx.channels.map((c) => c.id);
   const primaryChannel = ctx.channels[0] ?? null;
@@ -107,31 +109,26 @@ export default async function DashboardPage({
   const insights = (latestSummary?.insights as TldrInsight[] | null) ?? null;
   const videos = aggregateVideos(recentRes.data ?? []);
 
+  const greetingName = ctx.user.email?.split("@")[0] ?? "";
+
   if (!hasChannel) {
     return (
       <div className="mx-auto max-w-5xl flex flex-col gap-8">
         <div>
-          <h1 className="text-h1">Bonjour {ctx.user.email?.split("@")[0]} 👋</h1>
-          <p className="text-muted text-body mt-1">
-            Ta communauté t&apos;a envoyé des messages. SafeSpace les filtre
-            pour toi.
-          </p>
+          <h1 className="text-h1">{t("greeting", { name: greetingName })}</h1>
+          <p className="text-muted text-body mt-1">{t("subtitle")}</p>
         </div>
         <CheckInBanner todaysMood={todaysMood} />
         <section className="ss-card p-8 flex flex-col items-start gap-4">
           <div className="ss-pill-primary">
             <Sparkles className="h-3.5 w-3.5" aria-hidden />
-            Première étape
+            {t("firstStep")}
           </div>
-          <h2 className="text-h2">Connecte ta chaîne YouTube</h2>
-          <p className="text-muted">
-            On va aspirer tes commentaires des 7 derniers jours, les classer
-            par catégorie et masquer la toxicité. Aucun commentaire n&apos;est
-            jamais supprimé sur YouTube.
-          </p>
+          <h2 className="text-h2">{t("connectTitle")}</h2>
+          <p className="text-muted">{t("connectDesc")}</p>
           <a href="/api/youtube/connect" className="ss-button-primary">
             <Play className="h-4 w-4" aria-hidden />
-            Connecter YouTube
+            {t("connectCta")}
           </a>
         </section>
       </div>
@@ -141,11 +138,8 @@ export default async function DashboardPage({
   return (
     <div className="mx-auto max-w-5xl flex flex-col gap-8">
       <div>
-        <h1 className="text-h1">Bonjour {ctx.user.email?.split("@")[0]} 👋</h1>
-        <p className="text-muted text-body mt-1">
-          Ta communauté t&apos;a envoyé des messages. SafeSpace les filtre pour
-          toi.
-        </p>
+        <h1 className="text-h1">{t("greeting", { name: greetingName })}</h1>
+        <p className="text-muted text-body mt-1">{t("subtitle")}</p>
       </div>
 
       <CheckInBanner todaysMood={todaysMood} />
@@ -162,7 +156,7 @@ export default async function DashboardPage({
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          label="Commentaires filtrés"
+          label={t("metrics.filtered")}
           value={breakdown.total}
           icon={<Filter className="h-3.5 w-3.5" aria-hidden />}
           variant="primary"
@@ -170,12 +164,14 @@ export default async function DashboardPage({
           shielded={ctx.metricShield}
           hint={
             primaryChannel?.last_synced_at
-              ? `sync ${relativeTimeFr(primaryChannel.last_synced_at)}`
-              : "jamais synchronisé"
+              ? t("metrics.syncRelative", {
+                  time: relativeTimeFr(primaryChannel.last_synced_at),
+                })
+              : t("metrics.neverSynced")
           }
         />
         <MetricCard
-          label="Toxicité bloquée"
+          label={t("metrics.toxicity")}
           value={breakdown.toxic}
           icon={<ShieldCheck className="h-3.5 w-3.5" aria-hidden />}
           variant="primary"
@@ -183,12 +179,12 @@ export default async function DashboardPage({
           shielded={ctx.metricShield}
           hint={
             breakdown.total > 0
-              ? `${Math.round((breakdown.toxic / breakdown.total) * 100)}% du flux`
+              ? `${Math.round((breakdown.toxic / breakdown.total) * 100)}%`
               : undefined
           }
         />
         <MetricCard
-          label="Score communauté"
+          label={t("metrics.score")}
           value={score}
           suffix="/100"
           icon={<Gauge className="h-3.5 w-3.5" aria-hidden />}
@@ -197,40 +193,36 @@ export default async function DashboardPage({
           }
           alwaysVisible
           shielded={ctx.metricShield}
-          hint="positifs - toxiques, pondéré"
         />
         <MetricCard
-          label="Abonnés"
+          label={t("metrics.subscribers")}
           value={primaryChannel?.subscriber_count ?? null}
           icon={<Users className="h-3.5 w-3.5" aria-hidden />}
           variant="primary"
           defaultVisible={false}
           shielded={ctx.metricShield}
-          hint="masqué par défaut · Metric Shield"
+          hint={t("metrics.shieldHidden")}
         />
       </section>
 
       <section className="ss-card p-6">
         <header className="flex items-center justify-between gap-3">
-          <h2 className="text-h2">Vidéos récentes</h2>
+          <h2 className="text-h2">{t("videosRecent")}</h2>
           <form action="/api/youtube/sync" method="post">
             <input type="hidden" name="redirect" value="1" />
             <button
               type="submit"
               className="ss-button-ghost h-9 px-3 text-caption"
-              aria-label="Synchroniser"
+              aria-label={t("sync")}
             >
               <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-              Synchroniser
+              {t("sync")}
             </button>
           </form>
         </header>
 
         {videos.length === 0 ? (
-          <p className="text-caption text-muted mt-4">
-            Aucune vidéo avec commentaires sur les 7 derniers jours. Lance un
-            sync pour aspirer.
-          </p>
+          <p className="text-caption text-muted mt-4">{t("videosEmpty")}</p>
         ) : (
           <ul className="mt-4 flex flex-col gap-3">
             {videos.map((v) => (
@@ -245,7 +237,7 @@ export default async function DashboardPage({
               href="/feed"
               className="text-caption text-primary hover:underline underline-offset-4"
             >
-              Voir tous les commentaires dans le Clean Feed →
+              {t("viewAllInFeed")}
             </Link>
           </div>
         ) : null}
@@ -253,8 +245,7 @@ export default async function DashboardPage({
 
       {breakdown.pending > 0 ? (
         <p className="text-caption text-muted text-center">
-          {breakdown.pending} commentaire{breakdown.pending > 1 ? "s" : ""} en
-          attente de classification — relance un sync.
+          {t("pendingClassification", { count: breakdown.pending })}
         </p>
       ) : null}
     </div>

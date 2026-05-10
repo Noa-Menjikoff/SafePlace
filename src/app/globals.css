@@ -20,11 +20,35 @@
   --color-ink: #1a1a22;
   --color-muted: #6b6878;
   --color-border: rgba(0, 0, 0, 0.08);
+  --color-focus-ring: rgba(83, 74, 183, 0.4);
+}
+
+[data-theme="dark"] {
+  --color-bg: #14141c;
+  --color-surface: #1c1c26;
+  --color-card: #232331;
+  --color-ink: #f0eee8;
+  --color-muted: #8a8798;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-primary-light: rgba(83, 74, 183, 0.22);
+  --color-primary-mid: #6e64d4;
+  --color-teal-light: rgba(29, 158, 117, 0.18);
+  --color-amber-light: rgba(239, 159, 39, 0.18);
+  --color-blue-light: rgba(55, 138, 221, 0.18);
+  --color-rose-light: rgba(182, 90, 131, 0.18);
+  --color-focus-ring: rgba(175, 169, 236, 0.55);
 }
 
 html,
 body {
   height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 body {
@@ -36,6 +60,17 @@ body {
   line-height: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* Accessible focus rings, only on keyboard nav */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 type Language = "fr" | "en";
@@ -12,7 +12,7 @@ const LANGUAGES: { value: Language; label: string; flag: string }[] = [
 ];
 
 export function LanguageSelector({ initial }: { initial: Language }) {
-  const router = useRouter();
+  const t = useTranslations("settings");
   const [value, setValue] = useState<Language>(initial);
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -29,10 +29,11 @@ export function LanguageSelector({ initial }: { initial: Language }) {
           body: JSON.stringify({ language: next }),
         });
         if (!res.ok) throw new Error("HTTP " + res.status);
-        router.refresh();
+        // Reload complet pour que NextIntlClientProvider recharge les messages.
+        window.location.reload();
       } catch (e) {
         console.error(e);
-        setError("Échec de l'enregistrement.");
+        setError(t("filterMode.saveError"));
         setValue(initial);
       }
     });
@@ -68,9 +69,7 @@ export function LanguageSelector({ initial }: { initial: Language }) {
           );
         })}
       </div>
-      <p className="text-caption text-muted">
-        L&apos;IA répondra dans cette langue (TL;DR, brouillons de réponse).
-      </p>
+      <p className="text-caption text-muted">{t("display.languageHint")}</p>
       {error ? <p className="text-caption text-amber">{error}</p> : null}
     </div>
   );

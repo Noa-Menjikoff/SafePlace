@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Inbox, Filter, X, ShieldCheck } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getAppContext } from "@/lib/auth-context";
 import { CommentCard, type CommentRow } from "@/components/comment-card";
@@ -30,6 +31,7 @@ export default async function FeedPage({
   searchParams: { filter?: string; video?: string };
 }) {
   const ctx = await getAppContext();
+  const t = await getTranslations("feed");
   const supabase = createSupabaseServerClient();
   const channelIds = ctx.channels.map((c) => c.id);
   const filter = (searchParams.filter as FeedFilter) ?? "all";
@@ -41,13 +43,10 @@ export default async function FeedPage({
       <div className="mx-auto max-w-3xl">
         <div className="ss-card p-10 text-center">
           <Inbox className="h-6 w-6 mx-auto text-muted" aria-hidden />
-          <h1 className="text-h1 mt-4">Aucune chaîne connectée</h1>
-          <p className="text-muted mt-2">
-            Connecte ta chaîne YouTube pour voir tes commentaires triés par
-            pertinence.
-          </p>
+          <h1 className="text-h1 mt-4">{t("noChannelTitle")}</h1>
+          <p className="text-muted mt-2">{t("noChannelDesc")}</p>
           <Link href="/settings" className="ss-button-primary mt-5 inline-flex">
-            Aller aux réglages
+            {t("noChannelCta")}
           </Link>
         </div>
       </div>
@@ -136,11 +135,8 @@ export default async function FeedPage({
   return (
     <div className="mx-auto max-w-3xl flex flex-col gap-6">
       <div>
-        <h1 className="text-h1">Clean Feed</h1>
-        <p className="text-muted text-body mt-1">
-          Tes commentaires triés par pertinence — questions et critiques
-          d&apos;abord, toxicité masquée en bas.
-        </p>
+        <h1 className="text-h1">{t("title")}</h1>
+        <p className="text-muted text-body mt-1">{t("subtitle")}</p>
       </div>
 
       <Link
@@ -160,18 +156,15 @@ export default async function FeedPage({
         <div className="ss-card flex items-center gap-3 p-3">
           <Filter className="h-4 w-4 text-primary" aria-hidden />
           <p className="text-caption text-muted flex-1">
-            Filtré sur la vidéo{" "}
-            <span className="text-ink font-medium">
-              {videoTitle ?? videoId}
-            </span>
+            {t("filteredOnVideo", { title: videoTitle ?? videoId })}
           </p>
           <Link
             href={filter === "all" ? "/feed" : `/feed?filter=${filter}`}
             className="ss-button-ghost h-8 px-2 text-caption"
-            aria-label="Retirer le filtre vidéo"
+            aria-label={t("removeFilter")}
           >
             <X className="h-3.5 w-3.5" aria-hidden />
-            Retirer
+            {t("removeFilter")}
           </Link>
         </div>
       ) : null}
@@ -181,9 +174,7 @@ export default async function FeedPage({
       {filtered.length === 0 ? (
         <div className="ss-card p-10 text-center">
           <p className="text-body text-muted">
-            {filter === "hidden"
-              ? "Rien à masquer pour l'instant. Bonne ambiance."
-              : "Aucun commentaire dans cette catégorie."}
+            {filter === "hidden" ? t("emptyHidden") : t("emptyCategory")}
           </p>
         </div>
       ) : (

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import NextTopLoader from "nextjs-toploader";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
+import { NO_FLASH_THEME_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,13 +11,19 @@ export const metadata: Metadata = {
     "SafeSpace filtre tes commentaires YouTube et te livre des insights actionnables, sans toxicité ni stress.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="fr">
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: NO_FLASH_THEME_SCRIPT }} />
+      </head>
       <body className="min-h-screen bg-bg text-ink antialiased">
         <NextTopLoader
           color="#534AB7"
@@ -24,7 +33,9 @@ export default function RootLayout({
           easing="ease-out"
           speed={250}
         />
-        {children}
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );
