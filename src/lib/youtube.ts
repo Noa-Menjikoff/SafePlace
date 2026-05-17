@@ -144,6 +144,10 @@ export type YoutubeCommentThread = {
   topLevelCommentId: string;
   authorName: string;
   authorAvatar: string | null;
+  /** Channel id YouTube canonique de l'auteur (UCxxx). null si la
+   *  réponse API ne le fournit pas (rare mais possible). Utilisé pour
+   *  agréger les profils stalker. */
+  authorChannelId: string | null;
   text: string;
   publishedAt: string;
   videoId: string;
@@ -202,6 +206,7 @@ export async function fetchChannelCommentThreads(
             snippet: {
               authorDisplayName: string;
               authorProfileImageUrl?: string;
+              authorChannelId?: { value: string };
               textOriginal?: string;
               textDisplay?: string;
               publishedAt: string;
@@ -228,6 +233,7 @@ export async function fetchChannelCommentThreads(
         topLevelCommentId: item.snippet.topLevelComment.id,
         authorName: snippet.authorDisplayName,
         authorAvatar: snippet.authorProfileImageUrl ?? null,
+        authorChannelId: snippet.authorChannelId?.value ?? null,
         text: snippet.textOriginal || snippet.textDisplay || "",
         publishedAt,
         videoId: item.snippet.videoId,

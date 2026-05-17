@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { syncChannelComments } from "@/lib/youtube-sync";
 import { classifyChannelPending } from "@/lib/classify";
+import { normalizePlan } from "@/lib/plans";
 import type { StoredChannel } from "@/lib/youtube";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
     .select("plan")
     .eq("id", user.id)
     .maybeSingle();
-  const plan = (profile?.plan as "free" | "pro" | undefined) ?? "free";
+  const plan = normalizePlan(profile?.plan);
 
   type SyncOutcome = {
     channelId: string;

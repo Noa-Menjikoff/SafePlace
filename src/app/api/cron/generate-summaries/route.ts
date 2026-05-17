@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { generateChannelSummary } from "@/lib/summary";
+import { sendDigests } from "@/lib/threat-detection";
 import { isAuthorizedCron } from "@/lib/cron-auth";
 
 export const dynamic = "force-dynamic";
@@ -88,6 +89,14 @@ export async function GET(request: NextRequest) {
     processed += 1;
   }
 
+  // Digest hebdomadaire — chaîné ici car le cron tourne le lundi matin.
+  let digest: Awaited<ReturnType<typeof sendDigests>> | null = null;
+  try {
+    digest = await sendDigests("digest_weekly");
+  } catch (e) {
+    console.error("cron generate-summaries: weekly digest failed", e);
+  }
+
   const summary = {
     ranAt: new Date().toISOString(),
     durationMs: Date.now() - startedAt,
@@ -96,6 +105,8 @@ export async function GET(request: NextRequest) {
     succeeded: results.filter((r) => r.ok).length,
     insufficient: results.filter((r) => !r.ok && r.insufficient).length,
     failed: results.filter((r) => !r.ok && !r.insufficient).length,
+    digestUsersEmailed: digest?.usersEmailed ?? 0,
+    digestAlertsSent: digest?.alertsSent ?? 0,
   };
 
   console.log("cron generate-summaries done", summary);

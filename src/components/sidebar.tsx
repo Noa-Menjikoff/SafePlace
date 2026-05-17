@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { hasProFeatures, type Plan } from "@/lib/plans";
 import {
   LayoutDashboard,
   Inbox,
   Heart,
+  Lightbulb,
   MessageSquareReply,
   BarChart3,
+  Shield,
   Settings,
   Lock,
 } from "lucide-react";
@@ -19,8 +22,10 @@ type NavKey =
   | "dashboard"
   | "feed"
   | "wall"
+  | "ideas"
   | "reply"
   | "stats"
+  | "security"
   | "settings";
 
 type NavItem = {
@@ -33,15 +38,18 @@ type NavItem = {
 const NAV: NavItem[] = [
   { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
   { href: "/feed", key: "feed", icon: Inbox },
+  { href: "/ideas", key: "ideas", icon: Lightbulb, proOnly: true },
   { href: "/wall", key: "wall", icon: Heart },
   { href: "/reply", key: "reply", icon: MessageSquareReply, proOnly: true },
   { href: "/stats", key: "stats", icon: BarChart3, proOnly: true },
+  { href: "/security", key: "security", icon: Shield },
   { href: "/settings", key: "settings", icon: Settings },
 ];
 
-export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
+export function Sidebar({ plan = "free" }: { plan?: Plan }) {
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const proAccess = hasProFeatures(plan);
 
   return (
     <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-border bg-surface px-4 py-6 sticky top-0 h-screen overflow-y-auto">
@@ -53,7 +61,7 @@ export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
         {NAV.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(item.href + "/");
-          const locked = item.proOnly && plan !== "pro";
+          const locked = item.proOnly && !proAccess;
           const Icon = item.icon;
 
           return (
@@ -81,14 +89,25 @@ export function Sidebar({ plan = "free" }: { plan?: "free" | "pro" }) {
         <div className="ss-card p-4">
           <p className="text-caption text-muted">{t("currentPlan")}</p>
           <p className="mt-1 text-body font-medium">
-            {plan === "pro" ? t("planPro") : t("planFree")}
+            {plan === "shield"
+              ? t("planShield")
+              : plan === "pro"
+                ? t("planPro")
+                : t("planFree")}
           </p>
-          {plan !== "pro" ? (
+          {plan === "free" ? (
             <Link
               href="/settings?upgrade=1"
               className="mt-3 inline-flex w-full justify-center ss-button-primary py-2 text-caption"
             >
               {t("upgradeCta")}
+            </Link>
+          ) : plan === "pro" ? (
+            <Link
+              href="/settings?upgrade=shield"
+              className="mt-3 inline-flex w-full justify-center ss-button-ghost py-2 text-caption"
+            >
+              {t("upgradeShieldCta")}
             </Link>
           ) : null}
         </div>

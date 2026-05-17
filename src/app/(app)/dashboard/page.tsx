@@ -2,7 +2,7 @@ import {
   Sparkles,
   Play,
   RefreshCw,
-  ShieldCheck,
+  Shield,
   Users,
   Filter,
   Gauge,
@@ -15,6 +15,11 @@ import { CheckInBanner } from "@/components/checkin-banner";
 import { TldrCard } from "@/components/tldr-card";
 import { MetricCard } from "@/components/metric-card";
 import { VideoRow, type VideoSummary } from "@/components/video-row";
+import { CriticalAlertsBanner } from "@/components/security/critical-alerts-banner";
+import {
+  DashboardIdeasCard,
+  type DashboardTopicPreview,
+} from "@/components/ideas/dashboard-ideas-card";
 import {
   computeCommunityScore,
   moodFromScore,
@@ -48,9 +53,19 @@ export default async function DashboardPage({
   // Une seule requête sur les commentaires : on agrège en JS.
   const startOfDay = new Date();
   startOfDay.setUTCHours(0, 0, 0, 0);
+  const thirtyDaysAgo = new Date(
+    Date.now() - 30 * 24 * 60 * 60 * 1000
+  ).toISOString();
 
-  const [commentsRes, latestCheckinRes, latestSummaryRes, recentRes] =
-    await Promise.all([
+  const [
+    commentsRes,
+    latestCheckinRes,
+    latestSummaryRes,
+    recentRes,
+    alertsTotalRes,
+    alertsCriticalRes,
+    topTopicsRes,
+  ] = await Promise.all([
       hasChannel
         ? supabase
             .from("comments")
@@ -95,6 +110,28 @@ export default async function DashboardPage({
               published_at: string | null;
             }>,
           }),
+      supabase
+        .from("threat_alerts")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", ctx.user.id)
+        .eq("dismissed", false)
+        .gte("created_at", thirtyDaysAgo),
+      supabase
+        .from("threat_alerts")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", ctx.user.id)
+        .eq("dismissed", false)
+        .eq("severity", 3),
+      hasChannel
+        ? supabase
+            .from("question_topics")
+            .select("id, label, question_count")
+            .in("channel_id", channelIds)
+            .eq("status", "pending")
+            .order("question_count", { ascending: false })
+            .order("last_seen_at", { ascending: false })
+            .limit(3)
+        : Promise.resolve({ data: [] as DashboardTopicPreview[] }),
     ]);
 
   const breakdown = aggregateBreakdown(commentsRes.data ?? []);
@@ -108,6 +145,9 @@ export default async function DashboardPage({
   const latestSummary = latestSummaryRes.data;
   const insights = (latestSummary?.insights as TldrInsight[] | null) ?? null;
   const videos = aggregateVideos(recentRes.data ?? []);
+  const alertsTotal = alertsTotalRes.count ?? 0;
+  const alertsCritical = alertsCriticalRes.count ?? 0;
+  const topTopics = (topTopicsRes.data ?? []) as DashboardTopicPreview[];
 
   const greetingName = ctx.user.email?.split("@")[0] ?? "";
 
@@ -144,6 +184,8 @@ export default async function DashboardPage({
 
       <CheckInBanner todaysMood={todaysMood} />
 
+      <CriticalAlertsBanner count={alertsCritical} />
+
       <TldrCard
         insights={insights}
         rawCount={latestSummary?.raw_count ?? null}
@@ -170,19 +212,21 @@ export default async function DashboardPage({
               : t("metrics.neverSynced")
           }
         />
-        <MetricCard
-          label={t("metrics.toxicity")}
-          value={breakdown.toxic}
-          icon={<ShieldCheck className="h-3.5 w-3.5" aria-hidden />}
-          variant="primary"
-          alwaysVisible
-          shielded={ctx.metricShield}
-          hint={
-            breakdown.total > 0
-              ? `${Math.round((breakdown.toxic / breakdown.total) * 100)}%`
-              : undefined
-          }
-        />
+        <Link href="/security" className="contents">
+          <MetricCard
+            label={t("metrics.security")}
+            value={alertsTotal}
+            icon={<Shield className="h-3.5 w-3.5" aria-hidden />}
+            variant={alertsCritical > 0 ? "amber" : "primary"}
+            alwaysVisible
+            shielded={ctx.metricShield}
+            hint={
+              alertsCritical > 0
+                ? t("metrics.securityCritical", { count: alertsCritical })
+                : t("metrics.security30d")
+            }
+          />
+        </Link>
         <MetricCard
           label={t("metrics.score")}
           value={score}
@@ -204,6 +248,8 @@ export default async function DashboardPage({
           hint={t("metrics.shieldHidden")}
         />
       </section>
+
+      <DashboardIdeasCard topics={topTopics} plan={ctx.plan} />
 
       <section className="ss-card p-6">
         <header className="flex items-center justify-between gap-3">

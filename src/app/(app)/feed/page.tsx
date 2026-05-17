@@ -57,7 +57,7 @@ export default async function FeedPage({
   let query = supabase
     .from("comments")
     .select(
-      "id, text, author_name, author_avatar, category, is_toxic, toxicity_score, is_hidden, is_saved_to_wall, published_at, video_id, video_title"
+      "id, text, author_name, author_avatar, category, is_toxic, toxicity_score, is_hidden, is_saved_to_wall, published_at, video_id, video_title, threat_level"
     )
     .in("channel_id", channelIds);
 

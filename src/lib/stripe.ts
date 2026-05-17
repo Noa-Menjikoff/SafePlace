@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { Plan } from "@/lib/plans";
 
 let _stripe: Stripe | null = null;
 
@@ -31,6 +32,32 @@ export function getProPriceId(): string {
     );
   }
   return id;
+}
+
+/**
+ * ID du price Stripe pour le plan Shield mensuel (29 €/mois).
+ * Inclut tout Pro + Threat Detection (page /security, alertes email, raid detection).
+ */
+export function getShieldPriceId(): string {
+  const id = process.env.STRIPE_PRICE_ID_SHIELD;
+  if (!id) {
+    throw new Error(
+      "STRIPE_PRICE_ID_SHIELD is missing — créer le price dans Stripe et l'ajouter à .env.local"
+    );
+  }
+  return id;
+}
+
+/** Mappe un price ID Stripe vers le Plan SafeSpace correspondant. */
+export function planFromPriceId(priceId: string | null | undefined): Plan {
+  if (!priceId) return "free";
+  const shield = process.env.STRIPE_PRICE_ID_SHIELD;
+  const pro = process.env.STRIPE_PRICE_ID_PRO;
+  if (shield && priceId === shield) return "shield";
+  if (pro && priceId === pro) return "pro";
+  // Subscription Stripe sans match (test ancien price ID) → on tombe sur pro
+  // par sécurité (l'utilisateur a payé quelque chose).
+  return "pro";
 }
 
 /**
@@ -73,7 +100,7 @@ export async function ensureCustomer(args: {
 export async function syncSubscriptionToProfile(
   subscription: Stripe.Subscription,
   fallbackUserId?: string | null
-): Promise<{ ok: boolean; userId: string | null; plan: "free" | "pro" }> {
+): Promise<{ ok: boolean; userId: string | null; plan: Plan }> {
   const admin = createSupabaseAdminClient();
   const customerId =
     typeof subscription.customer === "string"
@@ -98,7 +125,12 @@ export async function syncSubscriptionToProfile(
   }
 
   const isActive = ACTIVE_STATUSES.has(subscription.status);
-  const plan: "free" | "pro" = isActive ? "pro" : "free";
+  // On lit le price ID du premier item de la subscription pour savoir
+  // si c'est un abonnement Pro ou Shield. Si la subscription est
+  // inactive (canceled/incomplete), on retombe sur 'free'.
+  const firstItemPrice =
+    subscription.items?.data?.[0]?.price?.id ?? null;
+  const plan: Plan = isActive ? planFromPriceId(firstItemPrice) : "free";
 
   await admin
     .from("profiles")
@@ -119,7 +151,7 @@ export async function syncSubscriptionToProfile(
 export async function syncProfileFromCustomer(
   customerId: string,
   userId: string
-): Promise<{ ok: boolean; plan: "free" | "pro" }> {
+): Promise<{ ok: boolean; plan: Plan }> {
   const stripe = getStripe();
   const subs = await stripe.subscriptions.list({
     customer: customerId,

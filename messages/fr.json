@@ -11,13 +11,17 @@
     "dashboard": "Dashboard",
     "feed": "Clean Feed",
     "wall": "Mur de soutien",
+    "ideas": "Idées de vidéos",
     "reply": "Quick Reply",
     "stats": "Stats",
+    "security": "Sécurité",
     "settings": "Réglages",
     "planFree": "SafeSpace Gratuit",
     "planPro": "SafeSpace Pro",
+    "planShield": "SafeSpace Shield",
     "currentPlan": "Plan actuel",
-    "upgradeCta": "Passer en Pro"
+    "upgradeCta": "Passer en Pro",
+    "upgradeShieldCta": "Activer Shield"
   },
   "topbar": {
     "creatorSpace": "Espace créateur",
@@ -45,14 +49,32 @@
     "videosEmpty": "Aucune vidéo avec commentaires sur les 7 derniers jours. Lance un sync pour aspirer.",
     "viewAllInFeed": "Voir tous les commentaires dans le Clean Feed →",
     "pendingClassification": "{count, plural, one {# commentaire en attente de classification} other {# commentaires en attente de classification}} — relance un sync.",
+    "ideas": {
+      "title": "Idées de vidéos",
+      "subtitle": "Les questions qui reviennent — un sujet de vidéo concret derrière.",
+      "empty": "Pas encore de topic. Sync + clique sur \"Rafraîchir\" dans Idées.",
+      "questionsCount": "{count, plural, one {# personne en attente} other {# personnes en attente}}",
+      "viewAll": "Voir toutes les idées →",
+      "upsellTitle": "Idées de vidéos · Pro",
+      "upsellDesc": "Tes questions classées automatiquement en sujets de vidéo. Passe en Pro pour débloquer.",
+      "upsellCta": "Passer en Pro"
+    },
     "metrics": {
       "filtered": "Commentaires filtrés",
       "toxicity": "Toxicité bloquée",
+      "security": "Sécurité",
+      "security30d": "alertes sur 30 jours",
+      "securityCritical": "{count, plural, one {# urgence à traiter} other {# urgences à traiter}}",
       "score": "Score communauté",
       "subscribers": "Abonnés",
       "syncRelative": "sync {time}",
       "neverSynced": "jamais synchronisé",
       "shieldHidden": "masqué par défaut · Metric Shield"
+    },
+    "criticalAlerts": {
+      "title": "{count, plural, one {# alerte critique en attente} other {# alertes critiques en attente}}",
+      "subtitle": "Au moins une menace de sévérité urgente nécessite ton attention.",
+      "cta": "Voir →"
     }
   },
   "checkin": {
@@ -119,7 +141,14 @@
     "youtubePlatform": "YouTube",
     "anonymous": "Anonyme",
     "onVideo": "sur",
+    "openYoutube": "Ouvrir sur YouTube",
     "maskedHover": "Survole pour révéler. Le commentaire reste visible sur YouTube — il est juste masqué dans ton flux.",
+    "threat": {
+      "watch": "À surveiller",
+      "detected": "Menace détectée",
+      "urgent": "Menace · urgence",
+      "viewLabel": "Voir dans Sécurité"
+    },
     "actions": {
       "suggestions": "Suggestions IA",
       "suggestionsLoading": "Génération…",
@@ -156,6 +185,14 @@
     "badgePro": "Plan Pro",
     "title": "Quick Reply",
     "subtitle": "Réponds à dix questions similaires en un seul mouvement. L'IA regroupe ce qui se ressemble et te propose 3 brouillons par groupe.",
+    "tabs": {
+      "all": "Toutes les questions",
+      "topics": "Par topic"
+    },
+    "topicsExplainer": "Topics déjà clusterisés par SafeSpace — réponse en masse sans relancer l'IA.",
+    "topicsEmpty": "Aucun topic pour l'instant.",
+    "topicsEmptyHint": "Va sur Idées de vidéos pour lancer un cluster, puis reviens ici.",
+    "topicsViewAll": "Voir toutes les idées →",
     "emptyTitle": "Aucune question en attente",
     "emptyDesc": "Quand de nouvelles questions arriveront, on les regroupera ici pour que tu puisses répondre en un seul mouvement.",
     "pendingCount": "{count, plural, one {# question en attente de réponse} other {# questions en attente de réponse}}",
@@ -217,6 +254,7 @@
       "planLabel": "Plan {plan} : {used}/{limit} chaîne{plural} connectée{plural}",
       "planFree": "Gratuit",
       "planPro": "Pro",
+      "planShield": "Shield",
       "noChannelTitle": "Aucune chaîne connectée",
       "noChannelDesc": "Connecte ta chaîne YouTube pour démarrer l'analyse.",
       "connectCta": "Connecter YouTube",
@@ -252,6 +290,8 @@
       "syncErrorDesc": "YouTube a renvoyé une erreur. Vérifie les permissions ou réessaie dans un moment.",
       "stripeSuccessTitle": "Bienvenue chez Pro",
       "stripeSuccessDesc": "Ton abonnement est actif. Quick Reply, Stats 90j et tout le reste sont débloqués.",
+      "stripeShieldSuccessTitle": "Bienvenue chez Shield",
+      "stripeShieldSuccessDesc": "Tout Pro + détection de menaces, profils stalker, alertes email. Tu peux configurer la fréquence dans Sécurité → Préférences.",
       "stripeCancelTitle": "Paiement annulé",
       "stripeCancelDesc": "Tu peux relancer le checkout à tout moment depuis cette page.",
       "stripeErrorTitle": "Stripe a renvoyé une erreur",
@@ -300,12 +340,16 @@
     "subscription": {
       "badgeFree": "Plan Gratuit",
       "badgePro": "Plan Pro",
+      "badgeShield": "Plan Shield",
       "titleFree": "Tout l'essentiel pour démarrer",
       "titlePro": "SafeSpace Pro",
+      "titleShield": "SafeSpace Shield",
       "priceFree": "0 €/mois · upgrade quand tu veux",
       "pricePro": "14 €/mois · facturé via Stripe",
+      "priceShield": "29 €/mois · sécurité avancée incluse",
       "managePortal": "Gérer via Stripe",
       "upgradeCta": "Passer en Pro · 14€/mois",
+      "upgradeShieldCta": "Activer Shield · 29€/mois",
       "freeFeatures": {
         "channels": "1 chaîne YouTube",
         "tldr": "TL;DR hebdomadaire",
@@ -317,7 +361,140 @@
         "tldr": "TL;DR quotidien + par vidéo",
         "replyStats": "Quick Reply + Stats 90j + Export CSV",
         "shield": "Metric Shield complet · sans limite"
+      },
+      "shieldFeatures": {
+        "threatDetection": "Tout Pro + détection de menaces (PII, doxxing)",
+        "stalkers": "Profils stalker · risk score sur 90j",
+        "raids": "Détection de raids coordonnés",
+        "emailAlerts": "Alertes email · digest ou immédiat"
       }
+    }
+  },
+  "security": {
+    "title": "Sécurité",
+    "subtitle": "Détection des données personnelles exposées, des profils suspects et des raids coordonnés.",
+    "scan": "Lancer un scan",
+    "scanDoneNone": "Scan terminé · aucune nouvelle alerte.",
+    "scanDoneN": "{count, plural, one {Scan terminé · # nouvelle alerte créée.} other {Scan terminé · # nouvelles alertes créées.}}",
+    "tabs": {
+      "alerts": "Alertes",
+      "stalkers": "Profils à surveiller",
+      "raids": "Raids",
+      "settings": "Préférences"
+    },
+    "severity": {
+      "0": "Bénin",
+      "1": "Attention",
+      "2": "Menace",
+      "3": "Urgence"
+    },
+    "alerts": {
+      "empty": "Aucune alerte. Ta communauté est saine.",
+      "emptyHint": "On scanne automatiquement après chaque sync.",
+      "filter": {
+        "active": "À traiter",
+        "dismissed": "Archivées",
+        "all": "Toutes"
+      },
+      "type": {
+        "pii": "Donnée personnelle exposée",
+        "stalker": "Pattern de harcèlement",
+        "raid": "Raid coordonné",
+        "threat": "Menace directe"
+      },
+      "category": {
+        "pii_location": "Lieu",
+        "pii_school": "École / travail",
+        "pii_family": "Famille",
+        "pii_identity": "Identité civile",
+        "pii_routine": "Routine",
+        "pii_photo": "Photo / contexte privé",
+        "threat_violence": "Menace physique",
+        "threat_doxxing": "Doxxing",
+        "threat_sexual": "Sexuel non consenti",
+        "harassment_pattern": "Harcèlement"
+      },
+      "viewComment": "Voir le commentaire",
+      "dismiss": "Archiver",
+      "blockAuthor": "Bloquer l'auteur",
+      "openYoutube": "Ouvrir sur YouTube"
+    },
+    "stalkers": {
+      "subtitle": "Auteurs avec un comportement répétitif ou hostile sur 90 jours.",
+      "empty": "Aucun profil à surveiller pour le moment.",
+      "comments": "{count, plural, one {# commentaire} other {# commentaires}}",
+      "negativeRatio": "{percent}% négatifs",
+      "threats": "{count, plural, one {# menace} other {# menaces}}",
+      "firstSeen": "Vu depuis {time}",
+      "lastSeen": "Dernier vu {time}",
+      "block": "Bloquer",
+      "unblock": "Débloquer",
+      "blocked": "Bloqué",
+      "riskHigh": "Risque élevé",
+      "riskModerate": "Risque modéré",
+      "riskLow": "Risque faible"
+    },
+    "raids": {
+      "subtitle": "Pic anormal de toxicité sur les 2 dernières heures.",
+      "empty": "Aucun raid détecté.",
+      "summary": "{toxic}/{total} commentaires toxiques · {ratio}%",
+      "window": "Fenêtre de 2h"
+    },
+    "prefs": {
+      "subtitle": "Choisis quand SafeSpace doit te prévenir par email.",
+      "emailMode": "Fréquence des emails",
+      "modes": {
+        "immediate": "Immédiat (urgences)",
+        "immediateDesc": "Email dès qu'une alerte de sévérité 3 est détectée.",
+        "digest_daily": "Digest quotidien",
+        "digest_dailyDesc": "Récap des alertes une fois par jour.",
+        "digest_weekly": "Digest hebdomadaire",
+        "digest_weeklyDesc": "Récap chaque lundi matin.",
+        "off": "Aucun email",
+        "offDesc": "Tout reste dans le dashboard, on ne t'écrit pas."
+      },
+      "minSeverity": "Sévérité minimum pour créer une alerte",
+      "minSeverityHint": "On ignore les commentaires sous ce seuil. Par défaut 2 (menace).",
+      "save": "Enregistrer",
+      "saved": "Préférences enregistrées",
+      "saveError": "Échec de l'enregistrement."
+    }
+  },
+  "ideas": {
+    "title": "Idées de vidéos",
+    "subtitle": "Tes questions classées par thématique — un thème = un sujet de vidéo concret.",
+    "cluster": "Rafraîchir",
+    "clustering": "Analyse…",
+    "clusterDoneNone": "Aucun nouveau topic créé.",
+    "clusterDoneCreated": "{count, plural, one {# nouveau topic créé.} other {# nouveaux topics créés.}}",
+    "clusterDoneUpdated": " {count, plural, one {# mis à jour.} other {# mis à jour.}}",
+    "tabs": {
+      "pending": "À traiter",
+      "answered": "Filmées",
+      "dismissed": "Archivées"
+    },
+    "empty": {
+      "pending": "Aucune idée pour le moment.",
+      "pendingHint": "Lance un sync pour aspirer de nouvelles questions, puis clique sur \"Rafraîchir\".",
+      "answered": "Aucune vidéo issue d'un topic pour l'instant.",
+      "dismissed": "Aucun topic archivé."
+    },
+    "card": {
+      "questionsCount": "{count, plural, one {# personne en attente} other {# personnes en attente}}",
+      "firstSeen": "Premier vu {time}",
+      "lastSeen": "Dernier vu {time}",
+      "answeredAt": "Marqué filmé {time}",
+      "exampleLabel": "Exemple",
+      "markAnswered": "Marquer comme filmé",
+      "dismiss": "Ignorer",
+      "reply": "Répondre à toutes",
+      "replyHelp": "Le message sera publié sous chaque question rattachée à ce topic.",
+      "replyPlaceholder": "Ex: Bonne question, je prépare une vidéo dessus !",
+      "replySend": "Envoyer à {count} {count, plural, one {personne} other {personnes}}",
+      "replySending": "Envoi…",
+      "replyCancel": "Annuler",
+      "replyDone": "{count, plural, one {Réponse envoyée à # personne.} other {Réponses envoyées à # personnes.}}",
+      "replyError": "Échec de l'envoi. Réessaie."
     }
   }
 }

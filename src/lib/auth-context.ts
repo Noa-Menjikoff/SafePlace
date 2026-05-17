@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { normalizePlan, type Plan } from "@/lib/plans";
 
 /**
  * Récupère l'utilisateur courant. Utiliser React `cache()` permet de
@@ -23,7 +24,7 @@ export const requireUser = cache(async () => {
 
 export type AppContext = {
   user: NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;
-  plan: "free" | "pro";
+  plan: Plan;
   filterMode: "sensitive" | "standard" | "tough";
   language: "fr" | "en";
   metricShield: boolean;
@@ -68,7 +69,7 @@ export const getAppContext = cache(async (): Promise<AppContext> => {
 
   return {
     user,
-    plan: (profile?.plan as "free" | "pro" | undefined) ?? "free",
+    plan: normalizePlan(profile?.plan),
     filterMode:
       (profile?.filter_mode as
         | "sensitive"

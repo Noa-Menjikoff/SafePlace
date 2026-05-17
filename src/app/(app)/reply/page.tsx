@@ -1,6 +1,9 @@
 import { MessageSquareReply } from "lucide-react";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { QuickReplyBoard } from "@/components/quick-reply-board";
+import {
+  QuickReplyBoard,
+  type InitialTopic,
+} from "@/components/quick-reply-board";
 
 export const dynamic = "force-dynamic";
 
@@ -25,24 +28,63 @@ export default async function ReplyPage() {
     videoTitle: string | null;
   }[] = [];
 
-  if (channelIds.length > 0) {
-    const { data: rows } = await supabase
-      .from("comments")
-      .select("id, text, author_name, video_id, video_title")
-      .in("channel_id", channelIds)
-      .eq("category", "question")
-      .eq("is_toxic", false)
-      .eq("is_hidden", false)
-      .is("replied_at", null)
-      .order("published_at", { ascending: false })
-      .limit(80);
+  let initialTopics: InitialTopic[] = [];
 
-    initialQuestions = (rows ?? []).map((r) => ({
+  if (channelIds.length > 0) {
+    const [questionsRes, topicsRes] = await Promise.all([
+      supabase
+        .from("comments")
+        .select("id, text, author_name, video_id, video_title")
+        .in("channel_id", channelIds)
+        .eq("category", "question")
+        .eq("is_toxic", false)
+        .eq("is_hidden", false)
+        .is("replied_at", null)
+        .order("published_at", { ascending: false })
+        .limit(80),
+      supabase
+        .from("question_topics")
+        .select(
+          "id, label, example_text, question_count, last_seen_at"
+        )
+        .in("channel_id", channelIds)
+        .eq("status", "pending")
+        .order("question_count", { ascending: false })
+        .order("last_seen_at", { ascending: false })
+        .limit(20),
+    ]);
+
+    initialQuestions = (questionsRes.data ?? []).map((r) => ({
       id: r.id,
       text: r.text ?? "",
       authorName: r.author_name,
       videoId: r.video_id,
       videoTitle: r.video_title,
+    }));
+
+    // Compte les commentaires non répondus par topic — sert au bouton
+    // "Envoyer à N personnes" du TopicReplyForm.
+    const topicIds = (topicsRes.data ?? []).map((t) => t.id as string);
+    const pendingByTopic = new Map<string, number>();
+    if (topicIds.length > 0) {
+      const { data: pendingRows } = await supabase
+        .from("comments")
+        .select("topic_id")
+        .in("topic_id", topicIds)
+        .is("replied_at", null);
+      for (const row of pendingRows ?? []) {
+        const id = row.topic_id as string | null;
+        if (!id) continue;
+        pendingByTopic.set(id, (pendingByTopic.get(id) ?? 0) + 1);
+      }
+    }
+
+    initialTopics = (topicsRes.data ?? []).map((t) => ({
+      id: t.id as string,
+      label: t.label as string,
+      example: (t.example_text as string | null) ?? null,
+      questionCount: t.question_count as number,
+      pendingReplies: pendingByTopic.get(t.id as string) ?? 0,
     }));
   }
 
@@ -60,7 +102,10 @@ export default async function ReplyPage() {
         </p>
       </header>
 
-      <QuickReplyBoard initialQuestions={initialQuestions} />
+      <QuickReplyBoard
+        initialQuestions={initialQuestions}
+        initialTopics={initialTopics}
+      />
     </div>
   );
 }

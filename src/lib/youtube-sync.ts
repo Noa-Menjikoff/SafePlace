@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { hasProFeatures, type Plan } from "@/lib/plans";
 import {
   fetchChannelCommentThreads,
   fetchMineChannel,
@@ -20,9 +21,11 @@ export type SyncResult = {
 
 export async function syncChannelComments(
   channel: StoredChannel,
-  plan: "free" | "pro"
+  plan: Plan
 ): Promise<SyncResult> {
-  const cap = plan === "pro" ? PRO_PLAN_COMMENT_CAP : FREE_PLAN_COMMENT_CAP;
+  const cap = hasProFeatures(plan)
+    ? PRO_PLAN_COMMENT_CAP
+    : FREE_PLAN_COMMENT_CAP;
   const sinceISO = new Date(
     Date.now() - SYNC_WINDOW_DAYS * 24 * 60 * 60 * 1000
   ).toISOString();
@@ -62,6 +65,7 @@ export async function syncChannelComments(
     platform_comment_id: t.topLevelCommentId,
     author_name: t.authorName,
     author_avatar: t.authorAvatar,
+    platform_author_id: t.authorChannelId,
     text: t.text,
     published_at: t.publishedAt,
     video_id: t.videoId,

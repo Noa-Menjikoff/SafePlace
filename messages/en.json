@@ -11,13 +11,17 @@
     "dashboard": "Dashboard",
     "feed": "Clean Feed",
     "wall": "Support Wall",
+    "ideas": "Video ideas",
     "reply": "Quick Reply",
     "stats": "Stats",
+    "security": "Security",
     "settings": "Settings",
     "planFree": "SafeSpace Free",
     "planPro": "SafeSpace Pro",
+    "planShield": "SafeSpace Shield",
     "currentPlan": "Current plan",
-    "upgradeCta": "Upgrade to Pro"
+    "upgradeCta": "Upgrade to Pro",
+    "upgradeShieldCta": "Activate Shield"
   },
   "topbar": {
     "creatorSpace": "Creator space",
@@ -45,14 +49,32 @@
     "videosEmpty": "No videos with comments in the last 7 days. Run a sync to fetch.",
     "viewAllInFeed": "See all comments in the Clean Feed →",
     "pendingClassification": "{count, plural, one {# comment pending classification} other {# comments pending classification}} — run another sync.",
+    "ideas": {
+      "title": "Video ideas",
+      "subtitle": "Questions that keep coming back — a concrete video topic behind.",
+      "empty": "No topic yet. Sync + click \"Refresh\" in Ideas.",
+      "questionsCount": "{count, plural, one {# person waiting} other {# people waiting}}",
+      "viewAll": "View all ideas →",
+      "upsellTitle": "Video ideas · Pro",
+      "upsellDesc": "Your questions auto-clustered into video topics. Upgrade to Pro to unlock.",
+      "upsellCta": "Upgrade to Pro"
+    },
     "metrics": {
       "filtered": "Comments filtered",
       "toxicity": "Toxicity blocked",
+      "security": "Security",
+      "security30d": "alerts over 30 days",
+      "securityCritical": "{count, plural, one {# urgent to handle} other {# urgents to handle}}",
       "score": "Community score",
       "subscribers": "Subscribers",
       "syncRelative": "synced {time}",
       "neverSynced": "never synced",
       "shieldHidden": "hidden by default · Metric Shield"
+    },
+    "criticalAlerts": {
+      "title": "{count, plural, one {# critical alert pending} other {# critical alerts pending}}",
+      "subtitle": "A level-3 threat needs your attention.",
+      "cta": "View →"
     }
   },
   "checkin": {
@@ -119,7 +141,14 @@
     "youtubePlatform": "YouTube",
     "anonymous": "Anonymous",
     "onVideo": "on",
+    "openYoutube": "Open on YouTube",
     "maskedHover": "Hover to reveal. The comment is still visible on YouTube — only hidden in your feed.",
+    "threat": {
+      "watch": "To watch",
+      "detected": "Threat detected",
+      "urgent": "Threat · urgent",
+      "viewLabel": "View in Security"
+    },
     "actions": {
       "suggestions": "AI suggestions",
       "suggestionsLoading": "Generating…",
@@ -156,6 +185,14 @@
     "badgePro": "Pro plan",
     "title": "Quick Reply",
     "subtitle": "Reply to ten similar questions in one move. The AI groups what's similar and proposes 3 drafts per group.",
+    "tabs": {
+      "all": "All questions",
+      "topics": "By topic"
+    },
+    "topicsExplainer": "Topics already clustered by SafeSpace — bulk reply without re-running the AI.",
+    "topicsEmpty": "No topic yet.",
+    "topicsEmptyHint": "Go to Video ideas to run a cluster, then come back here.",
+    "topicsViewAll": "View all ideas →",
     "emptyTitle": "No question waiting",
     "emptyDesc": "When new questions arrive, we'll group them here so you can reply in one move.",
     "pendingCount": "{count, plural, one {# question awaiting reply} other {# questions awaiting reply}}",
@@ -217,6 +254,7 @@
       "planLabel": "{plan} plan: {used}/{limit} channel{plural} connected",
       "planFree": "Free",
       "planPro": "Pro",
+      "planShield": "Shield",
       "noChannelTitle": "No channel connected",
       "noChannelDesc": "Connect your YouTube channel to start the analysis.",
       "connectCta": "Connect YouTube",
@@ -252,6 +290,8 @@
       "syncErrorDesc": "YouTube returned an error. Check the permissions or try again later.",
       "stripeSuccessTitle": "Welcome to Pro",
       "stripeSuccessDesc": "Your subscription is active. Quick Reply, 90d Stats and everything else are unlocked.",
+      "stripeShieldSuccessTitle": "Welcome to Shield",
+      "stripeShieldSuccessDesc": "Everything Pro + threat detection, stalker profiles, email alerts. Configure the frequency in Security → Preferences.",
       "stripeCancelTitle": "Payment cancelled",
       "stripeCancelDesc": "You can restart checkout from this page anytime.",
       "stripeErrorTitle": "Stripe returned an error",
@@ -300,12 +340,16 @@
     "subscription": {
       "badgeFree": "Free plan",
       "badgePro": "Pro plan",
+      "badgeShield": "Shield plan",
       "titleFree": "All the essentials to get started",
       "titlePro": "SafeSpace Pro",
+      "titleShield": "SafeSpace Shield",
       "priceFree": "$0/month · upgrade anytime",
       "pricePro": "$14/month · billed via Stripe",
+      "priceShield": "$29/month · advanced security included",
       "managePortal": "Manage via Stripe",
       "upgradeCta": "Go Pro · $14/month",
+      "upgradeShieldCta": "Activate Shield · $29/month",
       "freeFeatures": {
         "channels": "1 YouTube channel",
         "tldr": "Weekly TL;DR",
@@ -317,7 +361,140 @@
         "tldr": "Daily TL;DR + per video",
         "replyStats": "Quick Reply + 90d Stats + CSV export",
         "shield": "Full Metric Shield · no limit"
+      },
+      "shieldFeatures": {
+        "threatDetection": "Everything Pro + threat detection (PII, doxxing)",
+        "stalkers": "Stalker profiles · 90-day risk score",
+        "raids": "Coordinated raid detection",
+        "emailAlerts": "Email alerts · digest or immediate"
       }
+    }
+  },
+  "security": {
+    "title": "Security",
+    "subtitle": "Detect exposed personal information, suspicious profiles and coordinated raids.",
+    "scan": "Run a scan",
+    "scanDoneNone": "Scan complete · no new alerts.",
+    "scanDoneN": "{count, plural, one {Scan complete · # new alert created.} other {Scan complete · # new alerts created.}}",
+    "tabs": {
+      "alerts": "Alerts",
+      "stalkers": "Suspicious profiles",
+      "raids": "Raids",
+      "settings": "Preferences"
+    },
+    "severity": {
+      "0": "Benign",
+      "1": "Watch",
+      "2": "Threat",
+      "3": "Urgent"
+    },
+    "alerts": {
+      "empty": "No alerts. Your community is healthy.",
+      "emptyHint": "We scan automatically after every sync.",
+      "filter": {
+        "active": "To handle",
+        "dismissed": "Archived",
+        "all": "All"
+      },
+      "type": {
+        "pii": "Personal data exposed",
+        "stalker": "Harassment pattern",
+        "raid": "Coordinated raid",
+        "threat": "Direct threat"
+      },
+      "category": {
+        "pii_location": "Location",
+        "pii_school": "School / work",
+        "pii_family": "Family",
+        "pii_identity": "Civil identity",
+        "pii_routine": "Routine",
+        "pii_photo": "Photo / private context",
+        "threat_violence": "Physical threat",
+        "threat_doxxing": "Doxxing",
+        "threat_sexual": "Non-consensual sexual",
+        "harassment_pattern": "Harassment"
+      },
+      "viewComment": "View comment",
+      "dismiss": "Archive",
+      "blockAuthor": "Block author",
+      "openYoutube": "Open on YouTube"
+    },
+    "stalkers": {
+      "subtitle": "Authors with repetitive or hostile behavior over the last 90 days.",
+      "empty": "No profile to watch right now.",
+      "comments": "{count, plural, one {# comment} other {# comments}}",
+      "negativeRatio": "{percent}% negative",
+      "threats": "{count, plural, one {# threat} other {# threats}}",
+      "firstSeen": "Seen since {time}",
+      "lastSeen": "Last seen {time}",
+      "block": "Block",
+      "unblock": "Unblock",
+      "blocked": "Blocked",
+      "riskHigh": "High risk",
+      "riskModerate": "Moderate risk",
+      "riskLow": "Low risk"
+    },
+    "raids": {
+      "subtitle": "Abnormal toxicity spike over the last 2 hours.",
+      "empty": "No raid detected.",
+      "summary": "{toxic}/{total} toxic comments · {ratio}%",
+      "window": "2h window"
+    },
+    "prefs": {
+      "subtitle": "Choose when SafeSpace should email you.",
+      "emailMode": "Email frequency",
+      "modes": {
+        "immediate": "Immediate (urgent only)",
+        "immediateDesc": "Email as soon as a level-3 alert is detected.",
+        "digest_daily": "Daily digest",
+        "digest_dailyDesc": "One recap per day.",
+        "digest_weekly": "Weekly digest",
+        "digest_weeklyDesc": "Recap every Monday morning.",
+        "off": "No emails",
+        "offDesc": "Everything stays in the dashboard, no email."
+      },
+      "minSeverity": "Minimum severity to trigger an alert",
+      "minSeverityHint": "Comments below that level are ignored. Default 2 (threat).",
+      "save": "Save",
+      "saved": "Preferences saved",
+      "saveError": "Saving failed."
+    }
+  },
+  "ideas": {
+    "title": "Video ideas",
+    "subtitle": "Your questions clustered by theme — one theme = one concrete video topic.",
+    "cluster": "Refresh",
+    "clustering": "Analyzing…",
+    "clusterDoneNone": "No new topic created.",
+    "clusterDoneCreated": "{count, plural, one {# new topic created.} other {# new topics created.}}",
+    "clusterDoneUpdated": " {count, plural, one {# updated.} other {# updated.}}",
+    "tabs": {
+      "pending": "To handle",
+      "answered": "Filmed",
+      "dismissed": "Archived"
+    },
+    "empty": {
+      "pending": "No idea yet.",
+      "pendingHint": "Run a sync to fetch new questions, then click \"Refresh\".",
+      "answered": "No video coming from a topic yet.",
+      "dismissed": "No archived topic."
+    },
+    "card": {
+      "questionsCount": "{count, plural, one {# person waiting} other {# people waiting}}",
+      "firstSeen": "First seen {time}",
+      "lastSeen": "Last seen {time}",
+      "answeredAt": "Marked filmed {time}",
+      "exampleLabel": "Example",
+      "markAnswered": "Mark as filmed",
+      "dismiss": "Ignore",
+      "reply": "Reply to all",
+      "replyHelp": "The message will be posted under every question linked to this topic.",
+      "replyPlaceholder": "e.g. Great question, I'm preparing a video about this!",
+      "replySend": "Send to {count} {count, plural, one {person} other {people}}",
+      "replySending": "Sending…",
+      "replyCancel": "Cancel",
+      "replyDone": "{count, plural, one {Reply sent to # person.} other {Replies sent to # people.}}",
+      "replyError": "Send failed. Try again."
     }
   }
 }

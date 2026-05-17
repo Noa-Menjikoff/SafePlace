@@ -5,14 +5,17 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { hasProFeatures, type Plan } from "@/lib/plans";
 import {
   Menu,
   X,
   LayoutDashboard,
   Inbox,
   Heart,
+  Lightbulb,
   MessageSquareReply,
   BarChart3,
+  Shield,
   Settings,
   Lock,
 } from "lucide-react";
@@ -23,8 +26,10 @@ type NavKey =
   | "dashboard"
   | "feed"
   | "wall"
+  | "ideas"
   | "reply"
   | "stats"
+  | "security"
   | "settings";
 
 const NAV: {
@@ -35,17 +40,20 @@ const NAV: {
 }[] = [
   { href: "/dashboard", key: "dashboard", icon: LayoutDashboard },
   { href: "/feed", key: "feed", icon: Inbox },
+  { href: "/ideas", key: "ideas", icon: Lightbulb, proOnly: true },
   { href: "/wall", key: "wall", icon: Heart },
   { href: "/reply", key: "reply", icon: MessageSquareReply, proOnly: true },
   { href: "/stats", key: "stats", icon: BarChart3, proOnly: true },
+  { href: "/security", key: "security", icon: Shield },
   { href: "/settings", key: "settings", icon: Settings },
 ];
 
-export function MobileNav({ plan = "free" }: { plan?: "free" | "pro" }) {
+export function MobileNav({ plan = "free" }: { plan?: Plan }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("nav");
+  const proAccess = hasProFeatures(plan);
 
   // Marqueur de montage pour autoriser createPortal côté client uniquement.
   useEffect(() => {
@@ -97,7 +105,7 @@ export function MobileNav({ plan = "free" }: { plan?: "free" | "pro" }) {
           {NAV.map((item) => {
             const active =
               pathname === item.href || pathname.startsWith(item.href + "/");
-            const locked = item.proOnly && plan !== "pro";
+            const locked = item.proOnly && !proAccess;
             const Icon = item.icon;
             return (
               <Link
@@ -124,14 +132,25 @@ export function MobileNav({ plan = "free" }: { plan?: "free" | "pro" }) {
           <div className="rounded-lg border border-border bg-bg p-4">
             <p className="text-caption text-muted">{t("currentPlan")}</p>
             <p className="mt-1 text-body font-medium">
-              {plan === "pro" ? t("planPro") : t("planFree")}
+              {plan === "shield"
+                ? t("planShield")
+                : plan === "pro"
+                  ? t("planPro")
+                  : t("planFree")}
             </p>
-            {plan !== "pro" ? (
+            {plan === "free" ? (
               <Link
                 href="/settings?upgrade=1"
                 className="mt-3 inline-flex w-full justify-center ss-button-primary py-2 text-caption"
               >
                 {t("upgradeCta")}
+              </Link>
+            ) : plan === "pro" ? (
+              <Link
+                href="/settings?upgrade=shield"
+                className="mt-3 inline-flex w-full justify-center ss-button-ghost py-2 text-caption"
+              >
+                {t("upgradeShieldCta")}
               </Link>
             ) : null}
           </div>

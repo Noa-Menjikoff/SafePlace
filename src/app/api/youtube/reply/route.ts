@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { getValidAccessToken, postCommentReply } from "@/lib/youtube";
+import { hasProFeatures, normalizePlan } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profile?.plan !== "pro") {
+  if (!hasProFeatures(normalizePlan(profile?.plan))) {
     return NextResponse.json({ error: "pro_only" }, { status: 403 });
   }
 

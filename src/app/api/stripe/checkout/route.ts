@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { ensureCustomer, getProPriceId, getStripe } from "@/lib/stripe";
+import {
+  ensureCustomer,
+  getProPriceId,
+  getShieldPriceId,
+  getStripe,
+} from "@/lib/stripe";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +21,15 @@ export async function POST(request: NextRequest) {
     });
   }
 
+  const formData = await request.formData().catch(() => null);
+  const planParam = formData?.get("plan");
+  const targetPlan: "pro" | "shield" =
+    planParam === "shield" ? "shield" : "pro";
+
   let priceId: string;
   try {
-    priceId = getProPriceId();
+    priceId =
+      targetPlan === "shield" ? getShieldPriceId() : getProPriceId();
   } catch (e) {
     console.error(e);
     return NextResponse.redirect(
@@ -57,7 +68,7 @@ export async function POST(request: NextRequest) {
       allow_promotion_codes: true,
       client_reference_id: user.id,
       subscription_data: {
-        metadata: { user_id: user.id },
+        metadata: { user_id: user.id, target_plan: targetPlan },
       },
       success_url: `${origin}/api/stripe/confirm?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/settings?stripe=cancel`,

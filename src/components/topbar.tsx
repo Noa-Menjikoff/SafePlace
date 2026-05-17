@@ -1,11 +1,12 @@
 import { LogOut } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { MobileNav } from "@/components/mobile-nav";
+import type { Plan } from "@/lib/plans";
 
 type TopbarProps = {
   email?: string | null;
   channelName?: string | null;
-  plan?: "free" | "pro";
+  plan?: Plan;
 };
 
 export async function Topbar({ email, channelName, plan = "free" }: TopbarProps) {

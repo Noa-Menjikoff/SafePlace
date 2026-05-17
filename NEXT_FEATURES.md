@@ -3,13 +3,15 @@
 Spécifications détaillées des 3 features qui peuvent transformer SafeSpace de "filtre de commentaires" à "produit indispensable" pour les créateurs.
 
 **Ordre d'implémentation recommandé :**
-1. Threat & Stalker Detection (3-4 sem) — change le pricing power
-2. Questions → Idées de contenu (2-3 sem) — change le pitch commercial
+1. ~~Threat & Stalker Detection~~ ✅ **Livré** (voir PROJECT_OVERVIEW § 15)
+2. ~~Questions → Idées de contenu~~ ✅ **Livré** (voir PROJECT_OVERVIEW § 16)
 3. Carte hebdo partageable (1-2 sem) — débloque l'acquisition gratuite
 
 ---
 
 # Feature 1 — Threat & Stalker Detection
+
+> ✅ **Livré** — Migration 0007, plan Shield (29 €/mo) actif via Stripe, page `/security` avec 4 onglets, pipeline scan/stalkers/raid enchaîné dans le cron `sync-comments`, emails Resend (immédiat + digest daily/weekly). Détail complet dans [PROJECT_OVERVIEW.md § 15](PROJECT_OVERVIEW.md). Le reste de cette section est conservé comme trace de la spec initiale.
 
 ## Vision
 
@@ -239,6 +241,8 @@ Stripe :
 ---
 
 # Feature 2 — Questions → Idées de contenu
+
+> ✅ **Livré** — Migrations 0008 + 0009, route `/ideas` (3 onglets), card dashboard, `clusterQuestionsForChannel` chaîné dans le cron `sync-comments` (Pro/Shield), détection auto-`answered` via matching vidéos récentes, email "nouveaux topics émergent" Resend, intégration `/reply` (onglet "Par topic" qui économise un appel Gemini live). Détail complet dans [PROJECT_OVERVIEW.md § 16](PROJECT_OVERVIEW.md). Le reste de cette section est conservé comme trace de la spec initiale.
 
 ## Vision
 

@@ -49,9 +49,15 @@ export default async function SettingsPage({
 
   const youtubeChannels = ctx.channels.filter((c) => c.platform === "youtube");
   const plan = ctx.plan;
-  const channelLimit = plan === "pro" ? 3 : 1;
+  // Shield = Pro + plus → mêmes quotas chaînes.
+  const channelLimit = plan === "free" ? 1 : 3;
   const canAddChannel = youtubeChannels.length < channelLimit;
-  const planLabel = plan === "pro" ? tConnections("planPro") : tConnections("planFree");
+  const planLabel =
+    plan === "shield"
+      ? tConnections("planShield")
+      : plan === "pro"
+        ? tConnections("planPro")
+        : tConnections("planFree");
   const showRecoveryBanner = plan === "free" && !!ctx.stripeCustomerId;
   const reason = searchParams.reason as (typeof REASON_KEYS)[number] | undefined;
   const reasonText =
@@ -144,10 +150,14 @@ export default async function SettingsPage({
           <Check className="h-4 w-4 mt-0.5 text-teal" aria-hidden />
           <div>
             <p className="text-body font-medium text-teal">
-              {tBanners("stripeSuccessTitle")}
+              {plan === "shield"
+                ? tBanners("stripeShieldSuccessTitle")
+                : tBanners("stripeSuccessTitle")}
             </p>
             <p className="text-caption text-muted">
-              {tBanners("stripeSuccessDesc")}
+              {plan === "shield"
+                ? tBanners("stripeShieldSuccessDesc")
+                : tBanners("stripeSuccessDesc")}
             </p>
           </div>
         </div>

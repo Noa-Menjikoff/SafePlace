@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Sparkles,
   Send,
@@ -10,7 +12,9 @@ import {
   Check,
   AlertTriangle,
   RefreshCw,
+  Lightbulb,
 } from "lucide-react";
+import { TopicReplyForm } from "@/components/ideas/topic-reply-form";
 import { cn } from "@/lib/utils";
 
 type Question = {
@@ -21,12 +25,22 @@ type Question = {
   videoTitle: string | null;
 };
 
+export type InitialTopic = {
+  id: string;
+  label: string;
+  example: string | null;
+  questionCount: number;
+  pendingReplies: number;
+};
+
 type Group = {
   title: string;
   videoTitle: string | null;
   commentIds: string[];
   drafts: string[];
 };
+
+type TabKey = "all" | "topics";
 
 type SendOutcome = {
   succeeded: number;
@@ -35,32 +49,18 @@ type SendOutcome = {
 
 export function QuickReplyBoard({
   initialQuestions,
+  initialTopics = [],
 }: {
   initialQuestions: Question[];
+  initialTopics?: InitialTopic[];
 }) {
+  const t = useTranslations("reply");
+  const [tab, setTab] = useState<TabKey>("all");
   const [groups, setGroups] = useState<Group[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function group() {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/ai/group-questions", { method: "POST" });
-      if (!res.ok) {
-        if (res.status === 403) throw new Error("Cette fonction est réservée au plan Pro.");
-        throw new Error("Le groupement a échoué. Réessaie.");
-      }
-      const data = (await res.json()) as { groups: Group[] };
-      setGroups(data.groups ?? []);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur inconnue");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  if (initialQuestions.length === 0) {
+  if (initialQuestions.length === 0 && initialTopics.length === 0) {
     return (
       <div className="ss-card p-10 text-center">
         <Sparkles className="h-6 w-6 mx-auto text-primary-mid" aria-hidden />
@@ -71,6 +71,101 @@ export function QuickReplyBoard({
         </p>
       </div>
     );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Onglets : tout vs par-topic. On masque l'onglet topics si aucun
+          topic à afficher, pour ne pas distraire avec un onglet vide. */}
+      {initialTopics.length > 0 ? (
+        <nav
+          className="flex flex-wrap gap-1 border-b border-border"
+          aria-label="Reply view"
+        >
+          {(["all", "topics"] as const).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => setTab(k)}
+              className={cn(
+                "inline-flex items-center gap-2 px-4 py-2.5 text-body border-b-2 -mb-px transition-colors duration-200",
+                tab === k
+                  ? "border-primary text-ink"
+                  : "border-transparent text-muted hover:text-ink"
+              )}
+            >
+              {k === "topics" ? (
+                <Lightbulb className="h-4 w-4" aria-hidden />
+              ) : null}
+              {t(`tabs.${k}`)}
+              {k === "topics" ? (
+                <span
+                  className={cn(
+                    "ml-1 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full text-caption font-medium",
+                    tab === "topics"
+                      ? "bg-primary-light text-primary"
+                      : "bg-card text-muted"
+                  )}
+                >
+                  {initialTopics.length}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </nav>
+      ) : null}
+
+      {tab === "topics" && initialTopics.length > 0 ? (
+        <TopicsView topics={initialTopics} />
+      ) : (
+        <AllQuestionsView
+          initialQuestions={initialQuestions}
+          groups={groups}
+          setGroups={setGroups}
+          loading={loading}
+          setLoading={setLoading}
+          error={error}
+          setError={setError}
+        />
+      )}
+    </div>
+  );
+}
+
+function AllQuestionsView({
+  initialQuestions,
+  groups,
+  setGroups,
+  loading,
+  setLoading,
+  error,
+  setError,
+}: {
+  initialQuestions: Question[];
+  groups: Group[] | null;
+  setGroups: (g: Group[] | null) => void;
+  loading: boolean;
+  setLoading: (b: boolean) => void;
+  error: string | null;
+  setError: (e: string | null) => void;
+}) {
+  async function group() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/ai/group-questions", { method: "POST" });
+      if (!res.ok) {
+        if (res.status === 403)
+          throw new Error("Cette fonction est réservée au plan Pro.");
+        throw new Error("Le groupement a échoué. Réessaie.");
+      }
+      const data = (await res.json()) as { groups: Group[] };
+      setGroups(data.groups ?? []);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Erreur inconnue");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -288,6 +383,74 @@ function GroupCard({
       {sendError ? (
         <p className="text-caption text-amber">{sendError}</p>
       ) : null}
+    </article>
+  );
+}
+
+function TopicsView({ topics }: { topics: InitialTopic[] }) {
+  const t = useTranslations("reply");
+
+  return (
+    <div className="flex flex-col gap-4">
+      <section className="ss-card p-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-body font-medium">{t("tabs.topics")}</p>
+          <p className="text-caption text-muted mt-0.5">
+            {t("topicsExplainer")}
+          </p>
+        </div>
+        <Link
+          href="/ideas"
+          className="ss-button-ghost h-9 px-3 text-caption shrink-0"
+        >
+          {t("topicsViewAll")}
+        </Link>
+      </section>
+
+      {topics.length === 0 ? (
+        <div className="ss-card p-8 text-center">
+          <p className="text-body font-medium">{t("topicsEmpty")}</p>
+          <p className="text-caption text-muted mt-1">{t("topicsEmptyHint")}</p>
+        </div>
+      ) : (
+        <ul className="flex flex-col gap-3">
+          {topics.map((topic) => (
+            <li key={topic.id}>
+              <TopicReplyRow topic={topic} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function TopicReplyRow({ topic }: { topic: InitialTopic }) {
+  return (
+    <article className="ss-card p-5 flex flex-col gap-3">
+      <header className="flex flex-wrap items-start justify-between gap-2">
+        <h3 className="text-h2">{topic.label}</h3>
+        <span className="ss-pill-blue shrink-0">
+          <Users className="h-3 w-3" aria-hidden />
+          {topic.questionCount}
+        </span>
+      </header>
+
+      {topic.example ? (
+        <blockquote
+          className="border-l-2 border-primary pl-4 py-1 text-body italic text-ink/90"
+          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+        >
+          {topic.example}
+        </blockquote>
+      ) : null}
+
+      <div className="pt-1">
+        <TopicReplyForm
+          topicId={topic.id}
+          pendingCount={topic.pendingReplies}
+        />
+      </div>
     </article>
   );
 }

@@ -7,10 +7,13 @@ const PROTECTED_PREFIXES = [
   "/wall",
   "/reply",
   "/stats",
+  "/security",
+  "/ideas",
   "/settings",
 ];
 
-const PRO_PREFIXES = ["/reply", "/stats"];
+const PRO_PREFIXES = ["/reply", "/stats", "/ideas"];
+const SHIELD_PREFIXES = ["/security"];
 
 const PUBLIC_AUTH_ROUTES = ["/login"];
 
@@ -31,14 +34,25 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  if (user && PRO_PREFIXES.some((p) => pathname.startsWith(p))) {
+  // Gate par plan : on lit profile.plan une fois si nécessaire.
+  const isProRoute = PRO_PREFIXES.some((p) => pathname.startsWith(p));
+  const isShieldRoute = SHIELD_PREFIXES.some((p) => pathname.startsWith(p));
+
+  if (user && (isProRoute || isShieldRoute)) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("plan")
       .eq("id", user.id)
       .maybeSingle();
 
-    if (profile?.plan !== "pro") {
+    const plan = profile?.plan as "free" | "pro" | "shield" | undefined;
+
+    if (isShieldRoute && plan !== "shield") {
+      return NextResponse.redirect(
+        new URL("/settings?upgrade=shield", request.url)
+      );
+    }
+    if (isProRoute && plan !== "pro" && plan !== "shield") {
       return NextResponse.redirect(new URL("/settings?upgrade=1", request.url));
     }
   }
